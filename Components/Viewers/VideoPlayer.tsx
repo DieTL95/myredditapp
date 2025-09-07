@@ -19,7 +19,6 @@ import DialogVideoComponent from "./DialogVidComp";
 import { PiSpinner } from "react-icons/pi";
 
 const VideoPlayerComponent = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   url,
   duration,
   hasAudio,

@@ -14,6 +14,11 @@ export const auth = betterAuth({
       enabled: true,
     },
   },
+  trustedOrigins: [
+    "http://localhost:3000",
+    "https://myredditapp.vercel.app",
+    "https://media.redgifs.com",
+  ],
 
   socialProviders: {
     reddit: {
