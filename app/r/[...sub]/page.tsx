@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!res) {
     return {
       title: `${sub[0]} | RedditApp`,
+      referrer: "no-referrer",
     };
   }
 
@@ -42,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  return { title: "Reddit App" };
+  return { title: "Reddit App", referrer: "no-referrer" };
 }
 
 const SubredditPage = async (props: { params: Params }) => {
