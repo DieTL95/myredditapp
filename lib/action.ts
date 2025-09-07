@@ -474,8 +474,8 @@ export async function getRedGifsToken() {
     const res = await fetch("https://api.redgifs.com/v2/auth/temporary");
     if (res.ok) {
       const jsonData = await res.json();
-
-      return jsonData.accessToken;
+      console.log(jsonData);
+      return jsonData.token;
     }
   } catch (error) {
     throw new Error("Couldn't create token" + error);
