@@ -445,22 +445,8 @@ export const fetchRedgifsAction = async (id: string) => {
   if (!id) {
     return;
   }
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
 
-  const user = await db.user.findUnique({
-    where: {
-      id: session?.user.id,
-    },
-    include: {
-      redgifToken: {
-        select: {
-          accessToken: true,
-        },
-      },
-    },
-  });
+  const token = await getRedGifsToken();
 
   try {
     const res = await fetch(`https://api.redgifs.com/v2/gifs/${id}`, {
@@ -470,9 +456,8 @@ export const fetchRedgifsAction = async (id: string) => {
         "x-content-type-options": "nosniff",
         "content-type": "application/json",
         "referrer-policy": "strict-origin",
-        Authorization: `Bearer ${user?.redgifToken?.accessToken}`,
+        Authorization: `Bearer ${token}`,
       },
-      cache: "force-cache",
     });
 
     console.log(res);
@@ -485,66 +470,14 @@ export const fetchRedgifsAction = async (id: string) => {
     console.log(error);
   }
 };
-export const redgifsCallFunc = async function (id: string) {
-  console.log("redgif Function");
-
-  const gif = await fetchRedgifsAction(id);
-  if (gif) {
-    return gif;
-  } else {
-    console.log("failed");
-    await getRedGifsToken();
-  }
-};
 
 export async function getRedGifsToken() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-  if (!session?.user) {
-    throw new Error("Can't generate access token to guests.");
-  }
-
-  const user = await db.user.findUnique({
-    where: {
-      id: session?.user.id,
-    },
-    include: {
-      redgifToken: {
-        select: {
-          accessToken: true,
-        },
-      },
-    },
-  });
-
-  if (user?.redgifToken) {
-    await db.redgifsToken.delete({
-      where: {
-        userId: session.user.id,
-      },
-    });
-  }
-
-  const now = new Date(Date.now());
-
   try {
     const res = await fetch("https://api.redgifs.com/v2/auth/temporary");
     if (res.ok) {
-      const expires = new Date(now.setDate(now.getDate() + 1));
-
       const jsonData = await res.json();
-      const data = await db.redgifsToken.create({
-        data: {
-          accessToken: jsonData.token,
-          ipAddress: jsonData.addr,
-          redgifSession: jsonData.session,
-          userAgent: jsonData.agent,
-          userId: session.user.id,
-          expiresAt: expires,
-        },
-      });
-      return data.accessToken;
+
+      return jsonData.accessToken;
     }
   } catch (error) {
     throw new Error("Couldn't create token" + error);
