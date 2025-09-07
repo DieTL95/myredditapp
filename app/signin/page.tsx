@@ -12,7 +12,8 @@ const SigninPage = () => {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="flex w-full h-full justify-center items-center">
-        <button onClick={handleLogin}>Click Me :D</button>
+        <span>You need to use your Reddit account to Authorise this app.</span>
+        <button onClick={handleLogin}> Click </button>
       </div>
     </div>
   );
