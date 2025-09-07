@@ -5,7 +5,7 @@ import PostsSkeleton from "../LoadingSkeletons/PostsSkeleton";
 const SearchComp = () => {
   return (
     <Suspense fallback={<PostsSkeleton />}>
-      <SubSearchComponent />;
+      <SubSearchComponent />
     </Suspense>
   );
 };
