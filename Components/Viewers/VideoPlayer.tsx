@@ -19,7 +19,6 @@ import DialogVideoComponent from "./DialogVidComp";
 import { PiSpinner } from "react-icons/pi";
 
 const VideoPlayerComponent = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   url,
   duration,
   hasAudio,
@@ -254,10 +253,7 @@ const VideoPlayerComponent = ({
                   } as CSSProperties
                 }
               >
-                <source
-                  src="https://media.redgifs.com/AbleFrequentApisdorsatalaboriosa.mp4"
-                  type="video/mp4"
-                />
+                <source src={url} type="video/mp4" />
                 No Video Available
               </video>
 
