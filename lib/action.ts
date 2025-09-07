@@ -441,7 +441,7 @@ export const deleteAction = async (id: string, modhash: string) => {
   }
 };
 
-export const fetchRedgifsAction = async (id: string) => {
+export const fetchRedgifsAction = async (id: string): Promise<Gif> => {
   if (!id) {
     return;
   }
@@ -463,31 +463,27 @@ export const fetchRedgifsAction = async (id: string) => {
   });
 
   let count = 0;
-  console.log(user?.redgifToken?.accessToken);
+  console.log("DB Token: ", user?.redgifToken?.accessToken);
 
-  try {
-    const res = await fetch(`https://api.redgifs.com/v2/gifs/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
+  const res = await fetch(`https://api.redgifs.com/v2/gifs/${id}`, {
+    headers: {
+      "Content-Type": "application/json",
 
-        Authorization: `Bearer ${user?.redgifToken?.accessToken}`,
-      },
-    });
+      Authorization: `Bearer ${user?.redgifToken?.accessToken}`,
+    },
+  });
 
-    if (!res.ok && count < 2) {
-      await getRedGifsToken();
-      count++;
-      await fetchRedgifsAction(id);
-    }
+  console.log(`Count: ${count}`, "Res: ", res);
+  if (!res.ok && count < 2) {
+    await getRedGifsToken();
+    count++;
+    await fetchRedgifsAction(id);
+  }
 
-    console.log(res);
-    if (res.ok) {
-      const gif = await res.json();
-      console.log(gif);
-      return gif.gif as Gif;
-    }
-  } catch (error) {
-    console.log(error);
+  if (res.ok) {
+    const { gif } = await res.json();
+    console.log(gif);
+    return gif as Gif;
   }
 };
 
@@ -529,7 +525,7 @@ export async function getRedGifsToken() {
       const expires = new Date(now.setDate(now.getDate() + 1));
 
       const jsonData = await res.json();
-      console.log(jsonData);
+      console.log("Fetched Token: ", jsonData);
       const data = await db.redgifsToken.create({
         data: {
           accessToken: jsonData.token,

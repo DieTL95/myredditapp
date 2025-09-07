@@ -276,7 +276,7 @@ export const MediaHandleFunc = async (postData: Post, domain: string) => {
 
     const gif: Gif = await fetchRedgifsAction(id[1]);
 
-    console.log(gif);
+    console.log("Utils: ", gif);
     if (gif) {
       return gif;
     }
