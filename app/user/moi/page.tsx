@@ -1,7 +1,7 @@
 "use client";
 import VideoPlayerComponent from "@/Components/Viewers/VideoPlayer";
 
-const AssAssPage = () => {
+const MoiPage = () => {
   return (
     <div className="w-[40vw] flex flex-col">
       <VideoPlayerComponent
@@ -14,4 +14,4 @@ const AssAssPage = () => {
   );
 };
 
-export default AssAssPage;
+export default MoiPage;

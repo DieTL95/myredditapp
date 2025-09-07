@@ -19,6 +19,7 @@ import DialogVideoComponent from "./DialogVidComp";
 import { PiSpinner } from "react-icons/pi";
 
 const VideoPlayerComponent = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   url,
   duration,
   hasAudio,
@@ -46,7 +47,7 @@ const VideoPlayerComponent = ({
       return null;
     }
     return portals.createHtmlPortalNode();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handlePlay = () => {
@@ -196,7 +197,7 @@ const VideoPlayerComponent = ({
       });
       video?.removeEventListener("timeupdate", updateTime);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [videoRef, condition, isPlaying]);
 
   useEffect(() => {
@@ -253,7 +254,10 @@ const VideoPlayerComponent = ({
                   } as CSSProperties
                 }
               >
-                <source src={url} type="video/mp4" />
+                <source
+                  src="https://media.redgifs.com/EminentMonstrousBee.mp4"
+                  type="video/mp4"
+                />
                 No Video Available
               </video>
 
