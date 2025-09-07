@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 import {
   fetchFrontPage,
   fetchPostsAction,
+  fetchRedgifsAction,
   fetchUserInfo,
-  redgifsCallFunc,
 } from "./action";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { betterFetch } from "@better-fetch/fetch";
@@ -274,7 +274,7 @@ export const MediaHandleFunc = async (postData: Post, domain: string) => {
     }
     console.log(id);
 
-    const gif: Gif = await redgifsCallFunc(id[1]);
+    const gif: Gif = await fetchRedgifsAction(id[1]);
 
     console.log(gif);
     if (gif) {
