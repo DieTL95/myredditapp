@@ -447,15 +447,13 @@ export const fetchRedgifsAction = async (id: string) => {
   }
 
   const token = await getRedGifsToken();
+  console.log(token);
 
   try {
     const res = await fetch(`https://api.redgifs.com/v2/gifs/${id}`, {
       headers: {
         "Content-Type": "application/json",
-        "access-control-allow-origin": "https://www.redgifs.com",
-        "x-content-type-options": "nosniff",
-        "content-type": "application/json",
-        "referrer-policy": "strict-origin",
+
         Authorization: `Bearer ${token}`,
       },
     });
