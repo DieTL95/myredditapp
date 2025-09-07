@@ -255,7 +255,7 @@ const VideoPlayerComponent = ({
                 }
               >
                 <source
-                  src="https://media.redgifs.com/EminentMonstrousBee.mp4"
+                  src="https://media.redgifs.com/AbleFrequentApisdorsatalaboriosa.mp4"
                   type="video/mp4"
                 />
                 No Video Available
