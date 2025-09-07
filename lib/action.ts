@@ -508,11 +508,26 @@ export async function getRedGifsToken() {
     throw new Error("Can't generate access token to guests.");
   }
 
-  await db.redgifsToken.delete({
+  const user = await db.user.findUnique({
     where: {
-      userId: session.user.id,
+      id: session?.user.id,
+    },
+    include: {
+      redgifToken: {
+        select: {
+          accessToken: true,
+        },
+      },
     },
   });
+
+  if (user?.redgifToken) {
+    await db.redgifsToken.delete({
+      where: {
+        userId: session.user.id,
+      },
+    });
+  }
 
   const now = new Date(Date.now());
 
