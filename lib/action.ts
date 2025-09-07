@@ -485,18 +485,15 @@ export const fetchRedgifsAction = async (id: string) => {
     console.log(error);
   }
 };
-export const redgifsCallFunc = async function (id: string, tries: number) {
+export const redgifsCallFunc = async function (id: string) {
   console.log("redgif Function");
-  if (tries < 2) {
-    const gif = await fetchRedgifsAction(id);
-    if (gif) {
-      return gif;
-    } else {
-      console.log("failed");
-      await getRedGifsToken();
 
-      redgifsCallFunc(id, ++tries);
-    }
+  const gif = await fetchRedgifsAction(id);
+  if (gif) {
+    return gif;
+  } else {
+    console.log("failed");
+    await getRedGifsToken();
   }
 };
 

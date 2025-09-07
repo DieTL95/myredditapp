@@ -274,7 +274,7 @@ export const MediaHandleFunc = async (postData: Post, domain: string) => {
     }
     console.log(id);
 
-    const gif: Gif = await redgifsCallFunc(id[1], 0);
+    const gif: Gif = await redgifsCallFunc(id[1]);
 
     console.log(gif);
     if (gif) {
