@@ -492,6 +492,7 @@ export const redgifsCallFunc = async function (id: string, tries: number) {
     if (gif) {
       return gif;
     } else {
+      console.log("failed");
       await getRedGifsToken();
 
       redgifsCallFunc(id, ++tries);
