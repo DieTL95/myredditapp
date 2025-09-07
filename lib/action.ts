@@ -474,7 +474,7 @@ export async function getRedGifsToken() {
     const res = await fetch("https://api.redgifs.com/v2/auth/temporary");
     if (res.ok) {
       const jsonData = await res.json();
-
+      console.log(jsonData);
       return jsonData.accessToken;
     }
   } catch (error) {
