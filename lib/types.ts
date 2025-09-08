@@ -139,8 +139,6 @@ export type Gfy =
       width: number;
 
       duration: number;
-
-      hasAudio: boolean;
     }
   | undefined;
 

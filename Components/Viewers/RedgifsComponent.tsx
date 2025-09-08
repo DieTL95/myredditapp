@@ -75,7 +75,7 @@ const RedgifsComponent = ({
       <VideoPlayerComponent
         url={`https://media.redgifs.com/${gif.gifName}.mp4`}
         duration={gif.duration}
-        hasAudio={gif.hasAudio}
+        hasAudio={true}
         height={gif.height}
       />
     </div>
