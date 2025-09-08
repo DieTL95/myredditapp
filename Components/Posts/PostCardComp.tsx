@@ -93,8 +93,8 @@ const PostCardComp = ({
       <div className="flex  flex-col w-full ">
         <PostCardDetailsComponent post={post.data} />
         <div className="flex flex-col my-2 relative z-10  object-contain  ">
-          {post.data.removed_by !== null && (
-            <div>[Removed by {post.data.removed_by}]</div>
+          {post.data.removed_by_category !== null && (
+            <div>[Removed by {post.data.removed_by_category}]</div>
           )}
           {!post.data.is_self && post.data.selftext_html && (
             <LongSelfComponent

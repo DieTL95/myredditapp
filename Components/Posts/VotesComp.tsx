@@ -40,39 +40,43 @@ const VotesComponent = ({ post }: { post: VotesPropType }) => {
   };
   return (
     <div className="flex-row flex gap-1 items-center">
-      <button
-        disabled={isVoting}
-        type="button"
-        className={cn(
-          "hover:bg-gray-800 rounded-[50%] p-1 cursor-pointer",
-          isVoting && "cursor-wait bg-grey-800"
-        )}
-        onClick={() => handleVote("upvote")}
-      >
-        <IoArrowUp
+      {!post.archived && (
+        <button
+          disabled={isVoting}
+          type="button"
           className={cn(
-            "text-[1.250rem]",
-            voteState === true && "text-pink-500"
+            "hover:bg-gray-800 rounded-[50%] p-1 cursor-pointer",
+            isVoting && "cursor-wait bg-grey-800"
           )}
-        />{" "}
-      </button>
+          onClick={() => handleVote("upvote")}
+        >
+          <IoArrowUp
+            className={cn(
+              "text-[1.250rem]",
+              voteState === true && "text-pink-500"
+            )}
+          />{" "}
+        </button>
+      )}
       {post.score}{" "}
-      <button
-        type="button"
-        disabled={isVoting}
-        className={cn(
-          "hover:bg-gray-800 rounded-[50%] p-1 cursor-pointer",
-          isVoting && "cursor-wait bg-grey-800"
-        )}
-        onClick={() => handleVote("downvote")}
-      >
-        <IoArrowDown
+      {!post.archived && (
+        <button
+          type="button"
+          disabled={isVoting}
           className={cn(
-            "text-[1.250rem]",
-            voteState === false && "text-purple-500"
+            "hover:bg-gray-800 rounded-[50%] p-1 cursor-pointer",
+            isVoting && "cursor-wait bg-grey-800"
           )}
-        />
-      </button>
+          onClick={() => handleVote("downvote")}
+        >
+          <IoArrowDown
+            className={cn(
+              "text-[1.250rem]",
+              voteState === false && "text-purple-500"
+            )}
+          />
+        </button>
+      )}
     </div>
   );
 };

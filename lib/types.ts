@@ -7,6 +7,7 @@ export type QueriesPages = {
 
 export type PostData = {
   author: string;
+  archived: boolean;
   clicked: boolean;
   created: number;
   created_utc: number;
@@ -391,6 +392,7 @@ export type VotesPropType = {
   likes: boolean | null;
   name: string;
   score: number;
+  archived: boolean;
 };
 
 export type UserResType = {

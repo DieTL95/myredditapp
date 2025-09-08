@@ -1,17 +1,20 @@
-import type { PostData } from "@/lib/types";
+import { fetchUserInfo } from "@/lib/action";
+import type { Comments, PostData, UserInfo } from "@/lib/types";
 import Image from "next/image";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 const UserIconComponent = ({
   userIcon,
   post,
+  reply,
 }: {
   userIcon?: string;
   post?: PostData;
+  reply?: Comments;
 }) => {
   const subIcon = post?.sr_detail?.icon_img
     ? post?.sr_detail?.icon_img
     : post?.sr_detail?.community_icon;
-  // const [userInfo, setUserInfo] = useState<number>(0);
+  const [userInfo, setUserInfo] = useState<UserInfo>();
   const ref = useRef<HTMLDivElement>(null);
   const defaultImg = `/user-icons/avatar_default_0.png`;
   // function getRandomInt(min: number, max: number) {
@@ -20,39 +23,36 @@ const UserIconComponent = ({
   //   return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
   // }
 
-  // useEffect(() => {
-  //   const author = ref.current!;
-  //   if (!subIcon) {
-  //     const observer = new IntersectionObserver(
-  //       (enteries) => {
-  //         enteries.forEach(async (entry) => {
-  //           if (entry.isIntersecting) {
-  //             // const user = await fetchUserInfo(post.author);
-  //             const randInt = getRandomInt(0, 7);
-  //             console.log(randInt);
-  //             setUserInfo(randInt);
+  useEffect(() => {
+    const author = ref.current!;
+    if (reply) {
+      const observer = new IntersectionObserver(
+        (enteries) => {
+          enteries.forEach(async (entry) => {
+            if (entry.isIntersecting) {
+              const user = await fetchUserInfo(reply.author);
+              setUserInfo(user);
+              observer.unobserve(author);
+            }
+          });
+        },
+        {
+          rootMargin: "50% 0% 50% 0%",
+          root: null,
+        }
+      );
 
-  //             observer.unobserve(author);
-  //           }
-  //         });
-  //       },
-  //       {
-  //         rootMargin: "50% 0% 50% 0%",
-  //         root: null,
-  //       }
-  //     );
+      observer.observe(author);
 
-  //     observer.observe(author);
-
-  //     return () => observer.unobserve(author);
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
+      return () => observer.unobserve(author);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div ref={ref}>
       <Image
-        src={userIcon || subIcon || defaultImg}
+        src={userIcon || subIcon || userInfo?.icon_img || defaultImg}
         width={50}
         height={50}
         className="rounded-full"
