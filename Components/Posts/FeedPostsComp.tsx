@@ -21,6 +21,7 @@ const FeedPostsComp = ({
               <RepliesComponent
                 key={post.data.name}
                 reply={post.data as unknown as Comments}
+                userIcon={userIcon}
               />
             ) : (
               <PostCardComp

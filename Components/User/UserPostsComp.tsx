@@ -11,7 +11,7 @@ const UserPostsComponent = ({
 }: {
   username: string;
   page?: string;
-  userIcon: string;
+  userIcon?: string;
 }) => {
   const sort = "new";
   const redditType = "user";

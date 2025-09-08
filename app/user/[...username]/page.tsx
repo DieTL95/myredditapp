@@ -41,7 +41,7 @@ const UserPage = async (props: { params: Params }) => {
               <UserPostsComponent
                 username={username[0]}
                 page={username[1]}
-                userIcon={userInfo?.subreddit.icon_img || ""}
+                userIcon={userInfo?.icon_img}
               />
             </div>
           </>
