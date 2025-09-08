@@ -51,11 +51,10 @@ const RepliesComponent = ({
         parent !== "post" && "pl-4 py-2"
       )}
     >
-      {parent !== "post" && (
-        <div className="h-full w-fit mr-[8px] mt-1">
-          <UserIconComponent userIcon={userIcon} reply={reply} />
-        </div>
-      )}
+      <div className="h-full w-fit mr-[8px] mt-1">
+        <UserIconComponent userIcon={userIcon} reply={reply} />
+      </div>
+
       <div className="flex flex-col py-2 w-full  ">
         <div className="flex flex-col">
           <div className="flex flex-col gap-1">
