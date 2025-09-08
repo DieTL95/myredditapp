@@ -65,7 +65,6 @@ const PostCardComp = ({
       return;
     }
     if (post.data.domain === "reddit.com" || post.data.domain === "i.redd.it") {
-      console.log("peace");
       imgModalRef.current?.showModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

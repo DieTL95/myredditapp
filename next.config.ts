@@ -72,6 +72,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "**.redd.it",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "**.redditstatic.com",
         port: "",
         pathname: "/**",

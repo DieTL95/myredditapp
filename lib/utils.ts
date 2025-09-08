@@ -262,8 +262,6 @@ export const MediaHandleFunc = async (postData: Post, domain: string) => {
     } else {
       return postData.data.media?.reddit_video;
     }
-  } else if (postData.data.selftext) {
-    return postData.data.selftext_html;
   } else if (domain.includes("redgifs.com")) {
     const url = postData.data.url;
     const regex = /(?:(?:ifr|watch|i)\/)(\w+)/gm;
