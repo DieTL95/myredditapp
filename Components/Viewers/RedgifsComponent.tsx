@@ -1,4 +1,4 @@
-import type { Gif } from "@/lib/types";
+import type { Gfy } from "@/lib/types";
 import VideoPlayerComponent from "./VideoPlayer";
 import { PiSpinner } from "react-icons/pi";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ const RedgifsComponent = ({
   gif,
   thumbnail,
 }: {
-  gif: Gif;
+  gif: Gfy;
   thumbnail?: Thumbnail;
 }) => {
   const getRatio = (num: number) => {
@@ -73,7 +73,7 @@ const RedgifsComponent = ({
       ></div>
 
       <VideoPlayerComponent
-        url={gif.urls.hd || gif.urls.sd}
+        url={`https://media.redgifs.com/${gif.gifName}.mp4`}
         duration={gif.duration}
         hasAudio={gif.hasAudio}
         height={gif.height}

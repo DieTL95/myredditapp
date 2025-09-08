@@ -2,13 +2,13 @@
 
 import { headers } from "next/headers";
 import type {
-  Gif,
   PostWithComments,
   RedditData,
   SubmittionType,
   SubCardType,
   SubSearchType,
   UserInfo,
+  Gfy,
 } from "./types";
 import { auth } from "@/utils/auth";
 import db from "@/utils/prisma";
@@ -441,49 +441,43 @@ export const deleteAction = async (id: string, modhash: string) => {
   }
 };
 
-export const fetchRedgifsAction = async (id: string): Promise<Gif> => {
+export const fetchRedgifsAction = async (id: string): Promise<Gfy> => {
   if (!id) {
     return;
   }
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+  // const session = await auth.api.getSession({
+  //   headers: await headers(),
+  // });
 
-  const user = await db.user.findUnique({
-    where: {
-      id: session?.user.id,
-    },
-    include: {
-      redgifToken: {
-        select: {
-          accessToken: true,
-        },
-      },
-    },
-  });
+  // const user = await db.user.findUnique({
+  //   where: {
+  //     id: session?.user.id,
+  //   },
+  //   include: {
+  //     redgifToken: {
+  //       select: {
+  //         accessToken: true,
+  //       },
+  //     },
+  //   },
+  // });
 
-  let count = 0;
-  console.log("DB Token: ", user?.redgifToken?.accessToken);
+  // let count = 0;
+  // console.log("DB Token: ", user?.redgifToken?.accessToken);
 
-  const res = await fetch(`https://api.redgifs.com/v2/gifs/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
+  const res = await fetch(`https://api.redgifs.com/v1/gifs/${id}`);
 
-      Authorization: `Bearer ${user?.redgifToken?.accessToken}`,
-    },
-  });
-
-  console.log(`Count: ${count}`, "Res: ", res);
-  if (!res.ok && count < 2) {
-    await getRedGifsToken();
-    count++;
-    await fetchRedgifsAction(id);
-  }
+  // console.log(`Count: ${count}`, "Res: ", res);
+  // if (!res.ok && count < 2) {
+  //   await getRedGifsToken();
+  //   count++;
+  //   await fetchRedgifsAction(id);
+  // }
 
   if (res.ok) {
-    const { gif } = await res.json();
-    console.log(gif);
-    return gif as Gif;
+    const { gfyItem } = await res.json();
+    console.log(gfyItem);
+    return gfyItem as Gfy;
   }
 };
 

@@ -124,6 +124,26 @@ export type RedditData = {
   children: [];
 };
 
+export type Gfy =
+  | {
+      content_urls: {
+        mp4: {
+          url: string;
+          width: number;
+          height: number;
+        };
+      };
+
+      gifName: string;
+      height: number;
+      width: number;
+
+      duration: number;
+
+      hasAudio: boolean;
+    }
+  | undefined;
+
 export type Gif =
   | {
       urls: {

@@ -10,7 +10,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { betterFetch } from "@better-fetch/fetch";
 import { base64 } from "@better-auth/utils/base64";
 import type { OAuth2Tokens, ProviderOptions } from "better-auth";
-import type { Post, Gif, GalleryMetadata } from "./types";
+import type { Post, GalleryMetadata, Gfy } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -274,7 +274,7 @@ export const MediaHandleFunc = async (postData: Post, domain: string) => {
     }
     console.log(id);
 
-    const gif: Gif = await fetchRedgifsAction(id[1]);
+    const gif: Gfy = await fetchRedgifsAction(id[1]);
 
     console.log("Utils: ", gif);
     if (gif) {
