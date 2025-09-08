@@ -3,6 +3,7 @@ import { usePosts } from "@/lib/utils";
 import type { QueriesPages } from "@/lib/types";
 import LoaderComponent from "../Misc/LoaderComp";
 import FeedPostsComp from "../Posts/FeedPostsComp";
+import PostsSkeleton from "../LoadingSkeletons/PostsSkeleton";
 const SubPathComponent = ({
   subreddit,
   sort,
@@ -17,11 +18,13 @@ const SubPathComponent = ({
     fetchNextPage,
 
     hasNextPage,
-
+    isPending,
     isFetching,
     isLoading,
   } = usePosts(subreddit, sort || "hot", redditType);
-  return (
+  return isPending ? (
+    <PostsSkeleton />
+  ) : (
     <>
       {data && !isLoading && (
         <FeedPostsComp redditData={data as unknown as QueriesPages} />

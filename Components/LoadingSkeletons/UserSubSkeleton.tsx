@@ -2,7 +2,7 @@ import PostsSkeleton from "./PostsSkeleton";
 
 const UserAndSubSkeleton = () => {
   return (
-    <div className="flex flex-col w-[40vw] h-dvh border border-twitter-gray mx-auto box-border">
+    <div className="flex flex-col w-[40vw] h-dvh border border-twitter-gray mx-auto box-border bg-black">
       <div className="w-full ">
         <div className="w-full h-[200px] animate-pulse bg-gray-600 "></div>
       </div>

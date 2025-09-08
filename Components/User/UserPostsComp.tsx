@@ -3,6 +3,7 @@ import type { QueriesPages } from "@/lib/types";
 import { usePosts } from "@/lib/utils";
 import LoaderComponent from "../Misc/LoaderComp";
 import FeedPostsComp from "../Posts/FeedPostsComp";
+import PostsSkeleton from "../LoadingSkeletons/PostsSkeleton";
 
 const UserPostsComponent = ({
   username,
@@ -20,7 +21,7 @@ const UserPostsComponent = ({
     fetchNextPage,
 
     hasNextPage,
-
+    isPending,
     isFetching,
     isLoading,
   } = usePosts(username, sort, redditType, page || "overview");
@@ -28,7 +29,7 @@ const UserPostsComponent = ({
     return <div>User doesn&apos;t exist.</div>;
   }
   console.log(data);
-  return (
+  return isPending ? <PostsSkeleton/> : (
     <div>
       {data && !isLoading && (
         <FeedPostsComp

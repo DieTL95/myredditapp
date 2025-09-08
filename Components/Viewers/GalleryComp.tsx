@@ -46,7 +46,7 @@ const GalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
       <div className="flex flex-col w-full overflow-x-hidden  h-full justify-center items-center">
         <div className="flex items-center max-h-screen  h-full min-w-screen ">
           <>
-            <div className=" absolute top-[50%] h-10 right-0 z-50">
+            <div className=" absolute top-[50%] h-10 right-0 z-50 hover:scale-110">
               <button
                 onClick={() =>
                   setCurrentImg(
@@ -57,7 +57,7 @@ const GalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
                 <FaArrowCircleRight className="text-2xl text-white" />
               </button>
             </div>
-            <div className=" absolute top-[50%] h-10 left-0 z-50 ">
+            <div className=" absolute top-[50%] h-10 left-0 z-50 hover:scale-110">
               <button
                 onClick={() =>
                   setCurrentImg(

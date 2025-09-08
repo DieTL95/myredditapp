@@ -3,6 +3,7 @@ import type { QueriesPages } from "@/lib/types";
 import { usePosts } from "@/lib/utils";
 import LoaderComponent from "../Misc/LoaderComp";
 import FeedPostsComp from "../Posts/FeedPostsComp";
+import PostsSkeleton from "../LoadingSkeletons/PostsSkeleton";
 
 const SearchResultsComponent = ({
   query,
@@ -17,12 +18,14 @@ const SearchResultsComponent = ({
     fetchNextPage,
 
     hasNextPage,
-
+    isPending,
     isFetching,
     isLoading,
   } = usePosts(query, sort, redditType);
   console.log(data);
-  return (
+  return isPending ? (
+    <PostsSkeleton />
+  ) : (
     <div>
       {data && !isLoading && (
         <FeedPostsComp redditData={data as unknown as QueriesPages} />
