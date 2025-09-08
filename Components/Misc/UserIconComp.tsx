@@ -25,7 +25,8 @@ const UserIconComponent = ({
 
   useEffect(() => {
     const author = ref.current!;
-    if (reply && !userIcon) {
+    if (reply) {
+      console.log("reply");
       const observer = new IntersectionObserver(
         (enteries) => {
           enteries.forEach(async (entry) => {
