@@ -45,7 +45,12 @@ const RepliesComponent = ({
     modalRef.current?.showModal();
   }, [media, reggedSelf]);
   return (
-    <div className="flex flex-row w-full  pr-4">
+    <div
+      className={cn(
+        "flex flex-row w-full  pr-4",
+        parent !== "post" && "pl-4 py-2"
+      )}
+    >
       {parent !== "post" && (
         <div className="h-full w-fit mr-[8px] mt-1">
           <UserIconComponent userIcon={userIcon} />

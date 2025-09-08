@@ -3,7 +3,7 @@
 import { fetchCommentsAction } from "@/lib/action";
 import type { PostData, PostWithComments, Replies } from "@/lib/types";
 import { useEffect, useState } from "react";
-import RepliesComponent from "./GetCommentsComp";
+import GetCommentsComponent from "./GetCommentsComp";
 import PostCardComp from "../Posts/PostCardComp";
 
 type PostsChildren = {
@@ -37,7 +37,7 @@ const PostWithCommentsComponent = ({ params }: { params: string[] }) => {
     <div className="flex flex-col max-w-[40vw] mx-auto ">
       <PostCardComp post={post[0]} />
 
-      <RepliesComponent replies={replies} />
+      <GetCommentsComponent replies={replies} />
     </div>
   );
 };
