@@ -464,11 +464,7 @@ export const fetchRedgifsAction = async (id: string): Promise<Gif> => {
 
   let count = 0;
   console.log("DB Token: ", user?.redgifToken?.accessToken);
-  console.log("DB Token: ", user?.redgifToken?.accessToken);
 
-  const res = await fetch(`https://api.redgifs.com/v2/gifs/${id}`, {
-    headers: {
-      "Content-Type": "application/json",
   const res = await fetch(`https://api.redgifs.com/v2/gifs/${id}`, {
     headers: {
       "Content-Type": "application/json",
@@ -476,16 +472,7 @@ export const fetchRedgifsAction = async (id: string): Promise<Gif> => {
       Authorization: `Bearer ${user?.redgifToken?.accessToken}`,
     },
   });
-      Authorization: `Bearer ${user?.redgifToken?.accessToken}`,
-    },
-  });
 
-  console.log(`Count: ${count}`, "Res: ", res);
-  if (!res.ok && count < 2) {
-    await getRedGifsToken();
-    count++;
-    await fetchRedgifsAction(id);
-  }
   console.log(`Count: ${count}`, "Res: ", res);
   if (!res.ok && count < 2) {
     await getRedGifsToken();
@@ -538,7 +525,6 @@ export async function getRedGifsToken() {
       const expires = new Date(now.setDate(now.getDate() + 1));
 
       const jsonData = await res.json();
-      console.log("Fetched Token: ", jsonData);
       console.log("Fetched Token: ", jsonData);
       const data = await db.redgifsToken.create({
         data: {
