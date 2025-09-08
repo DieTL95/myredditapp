@@ -52,7 +52,7 @@ const UserIconComponent = ({
   return (
     <div ref={ref}>
       <Image
-        src={userIcon || subIcon || userInfo?.icon_img || defaultImg}
+        src={userIcon || userInfo?.icon_img || subIcon || defaultImg}
         width={50}
         height={50}
         className="rounded-full"
