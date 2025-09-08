@@ -25,11 +25,13 @@ const UserPostsComponent = ({
     isFetching,
     isLoading,
   } = usePosts(username, sort, redditType, page || "overview");
-  if (!data) {
+  if (!data && !isPending) {
     return <div>User doesn&apos;t exist.</div>;
   }
   console.log(data);
-  return isPending ? <PostsSkeleton/> : (
+  return isPending ? (
+    <PostsSkeleton />
+  ) : (
     <div>
       {data && !isLoading && (
         <FeedPostsComp
