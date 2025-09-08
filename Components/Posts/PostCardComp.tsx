@@ -16,7 +16,7 @@ import VotesComponent from "./VotesComp";
 import { TfiCommentAlt } from "react-icons/tfi";
 import LongSelfComponent from "../Misc/LongSelf";
 import YoutubeComponent from "../Viewers/YoutubeComp";
-import type { GalleryMetadata, Gif, Post, PostData } from "@/lib/types";
+import type { GalleryMetadata, Gfy, Post, PostData } from "@/lib/types";
 import PostCardDetailsComponent from "./PostCardDetails";
 import UserIconComponent from "../Misc/UserIconComp";
 
@@ -29,7 +29,7 @@ type Video = {
   has_audio: boolean;
 };
 
-type MediaType = Gif | Video | GalleryMetadata[] | string;
+type MediaType = Gfy | Video | GalleryMetadata[] | string;
 
 const PostCardComp = ({
   post,
@@ -133,7 +133,7 @@ const PostCardComp = ({
                     post.data.domain === "v3.redgifs.com") &&
                   openPostIndex === post.data.id ? (
                   <RedgifsComponent
-                    gif={media as Gif}
+                    gif={media as Gfy}
                     thumbnail={post.data.preview?.images}
                   />
                 ) : post.data.is_gallery &&
