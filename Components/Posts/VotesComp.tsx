@@ -39,7 +39,7 @@ const VotesComponent = ({ post }: { post: VotesPropType }) => {
     setIsVoting(false);
   };
   return (
-    <div className="flex-row flex gap-1 items-center">
+    <div className="flex-row flex gap-1 justify-center items-center">
       {!post.archived && (
         <button
           disabled={isVoting}

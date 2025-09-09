@@ -96,6 +96,22 @@ export type PostData = {
               height: number;
             };
           };
+          gif: {
+            resolutions: { url: string; width: number; height: number }[];
+            source: {
+              url: string;
+              width: number;
+              height: number;
+            };
+          };
+          mp4: {
+            resolutions: { url: string; width: number; height: number }[];
+            source: {
+              url: string;
+              width: number;
+              height: number;
+            };
+          };
         };
       },
     ];

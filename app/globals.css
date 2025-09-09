@@ -4,7 +4,9 @@
 @import 'tailwindcss/utilities.css';
 
 
-
+* {
+scrollbar-width: thin;
+}
  
 img, video {
 width: none;
@@ -61,8 +63,15 @@ body:has(.dialog[open]) {
 }
 
 
+.searchPopup {
+scrollbar-width: none;
+}
+
+
+
 .reply a {
-color: #bd009d
+color: #bd009d;
+  word-wrap: anywhere;
 }
 
 .reply a:hover {

@@ -46,6 +46,9 @@ const SubSearchComponent = () => {
   const handleOutsideClick = (e: Event) => {
     const target = e.target as Element;
 
+    const searchResult = document.getElementById("#searchResult");
+    console.log(target);
+    console.log(target.contains(searchResult));
     if (
       searchRef.current &&
       (!searchRef.current.contains(target) || target.id === "searchResult")
@@ -88,9 +91,11 @@ const SubSearchComponent = () => {
       <div>
         <div
           className={cn(
-            `flex flex-row group bg-pink-900 items-center justify-end overflow-hidden h-auto w-12 my-2 mx-auto  text-red-200 transition-[width] duration-1000`,
+            `flex flex-row group bg-pink-900  items-center justify-end overflow-hidden h-auto w-12 my-2 mx-auto  text-red-200 transition-[width] duration-1000`,
             searchOpen !== false ? "w-[40vw] " : " w-12",
-            data && searchOpen !== false ? "rounded-t-3xl" : "rounded-3xl"
+            value !== undefined && searchOpen !== false
+              ? "rounded-t-3xl"
+              : "rounded-3xl"
           )}
         >
           <div
@@ -160,7 +165,7 @@ const SubSearchComponent = () => {
         </div>
       </div>
       {searchOpen && value !== undefined && (
-        <div className="max-h-[80vh] max-w-[40vw] top-14 rounded-b-3xl absolute mx-auto z-40 overflow-x-hidden overflow-y-scroll bar odd:bg-pink-900">
+        <div className=" max-w-[40vw] top-14 rounded-b-3xl fixed mx-auto z-40 overflow-x-hidden overflow-y-scroll searchPopup ">
           <div className="bg-pink-800  w-[40vw] flex flex-row cursor-pointer text-[1.250rem] items-center  gap-2 max-h-[100px] h-[50px]">
             <HiMiniMagnifyingGlassCircle className="text-4xl" autoReverse />{" "}
             <Link

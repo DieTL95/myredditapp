@@ -21,7 +21,7 @@ export function relativeTimeFromElapsed(previous: number) {
 
   const msPerMinute = 60;
   const msPerHour = msPerMinute * 60;
-  const msPerDay = msPerHour * 24;
+  const msPerDay = msPerHour * 23;
   const msPerMonth = msPerDay * 30;
   const msPerYear = msPerDay * 365;
 
@@ -230,7 +230,69 @@ export async function refreshAccessToken({
   return tokens;
 }
 
-export const MediaHandleFunc = async (postData: Post, domain: string) => {
+export const mediaHandler = async (postData: Post, domain: string) => {
+  switch (domain) {
+    case "i.redd.it":
+      console.log("deine mutter");
+      return postData.data.url;
+
+    case "reddit.com":
+      console.log("deiner Vatah");
+      let mediaObject;
+      const moredata: GalleryMetadata[] = [];
+
+      if (postData.data.crosspost_parent_list) {
+        mediaObject = postData.data.crosspost_parent_list[0]
+          .media_metadata as GalleryMetadata[];
+      } else if (!postData.data.crosspost_parent) {
+        mediaObject = postData.data.media_metadata as GalleryMetadata[];
+      }
+
+      if (!mediaObject) {
+        return;
+      }
+
+      for (const element in mediaObject as GalleryMetadata[]) {
+        const data = mediaObject[element];
+        console.log(data);
+        if (data.status === "valid") {
+          moredata.push(data);
+        }
+      }
+      return moredata;
+
+    case "v.redd.it":
+      console.log("deiner Arsch");
+      if (postData.data.crosspost_parent_list !== undefined) {
+        return postData.data.crosspost_parent_list[0].media.reddit_video;
+      } else {
+        return postData.data.media?.reddit_video;
+      }
+
+    case "redgifs.com":
+    case "v3.redgifs.com":
+      const url = postData.data.url;
+      const regex = /(?:(?:ifr|watch|i)\/)(\w+)/gm;
+
+      const id = regex.exec(url);
+      if (!id) {
+        return "null";
+      }
+      console.log(id);
+
+      const gif: Gfy = await fetchRedgifsAction(id[1]);
+
+      console.log("Utils: ", gif);
+      if (gif) {
+        return gif;
+      }
+
+    default:
+      break;
+  }
+};
+
+export const notMedia = async (postData: Post, domain: string) => {
   if (domain === "reddit.com") {
     let mediaObject;
     const moredata: GalleryMetadata[] = [];

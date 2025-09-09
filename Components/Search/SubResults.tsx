@@ -7,37 +7,57 @@ const SubResultsComponents = ({
 }: {
   redditData: SubSearchType;
 }) => {
-  return redditData.subreddits.map((sub, index) => (
-    <div key={index} className="w-[40vw]">
-      <div className="flex flex-col w-full even:bg-pink-950 odd:bg-pink-900  ">
-        <div className="flex flex-row bg-[image:var(--image-url)] bg-contain max-h-[200px]">
-          <div className="flex flex-col gap-2 max-h-[100px]">
-            <div className="h-[100px]">
-              <div className="h-[100px]">
-                {sub.icon_img && (
-                  <Image
-                    src={sub.icon_img}
-                    height={100}
-                    width={100}
-                    objectFit="contain"
-                    alt={sub.name}
-                  />
-                )}
+  return (
+    <div className="w-[40vw] bg-pink-900 max-h-[525px] relative searchScrollable">
+      {redditData.subreddits.map((sub, index) => (
+        <div
+          key={index}
+          className="w-full even:bg-pink-800 odd:bg-pink-900 hover:border-2 border-pink-950 z-10"
+          id="searchResult"
+        >
+          <div className="flex flex-col w-full  -z-1 ">
+            <Link href={`/r/${sub.name}`} id="searchResult">
+              <div
+                className="flex flex-row bg-[image:var(--image-url)] bg-contain h-[82px]"
+                id="searchResult"
+              >
+                <div className="flex flex-col gap-2" id="searchResult">
+                  <div
+                    className="flex items-center justify-center"
+                    id="searchResult"
+                  >
+                    <div className="p-4">
+                      {sub.icon_img ? (
+                        <Image
+                          src={sub.icon_img}
+                          width={50}
+                          height={50}
+                          className="rounded-full"
+                          id="searchResult"
+                          alt="User Icon"
+                        />
+                      ) : (
+                        <div
+                          className="h-[50px] w-[50px]"
+                          id="searchResult"
+                        ></div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col justify-center" id="searchResult">
+                  {sub.name}
+                  <div id="searchResult">
+                    Subscribers: {sub.subscriber_count}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div className="flex flex-col">
-            <div>
-              <Link id="searchResult" href={`/r/${sub.name}`}>
-                {sub.name}
-              </Link>
-            </div>
-            <div>Subscribers: {sub.subscriber_count}</div>
+            </Link>
           </div>
         </div>
-      </div>
+      ))}
     </div>
-  ));
+  );
 };
 
 export default SubResultsComponents;

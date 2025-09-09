@@ -6,7 +6,7 @@ import Image from "next/image";
 import {
   cn,
   imageResolutions,
-  MediaHandleFunc,
+  mediaHandler,
   secMinHrConvert,
 } from "@/lib/utils";
 import RedditVideoComp from "../Viewers/RedditVideoComp";
@@ -50,7 +50,7 @@ const PostCardComp = ({
       return;
     }
 
-    const meddy = await MediaHandleFunc(postData, domain);
+    const meddy = await mediaHandler(postData, domain);
 
     if (!meddy) {
       return;
@@ -170,7 +170,8 @@ const PostCardComp = ({
                             : "object-cover"
                         )}
                       />
-                      {post.data.post_hint.includes("video") && (
+                      {(post.data.post_hint.includes("video") ||
+                        post.data.preview.images[0].variants.gif) && (
                         <div className="absolute flex justify-center  items-center  top-[45%] right-[45%] my-auto w-16 h-16 mx-auto z-100">
                           <svg viewBox="0 0 60 61" aria-hidden="true">
                             <g>
@@ -230,13 +231,13 @@ const PostCardComp = ({
           )}
         </div>
         <div className="flex flex-row  text-lg items-center px-1 pt-2 justify-between ">
-          <span className="flex-row items-center flex gap-2 ">
+          <span className="flex-row items-center flex gap-2 basis-1/3">
             <TfiCommentAlt /> {post.data.num_comments}
           </span>
-          <div>
+          <div className="basis-1/3">
             <VotesComponent post={post.data} />
           </div>
-          <div>
+          <div className="basis-1/3 flex justify-end">
             <BsThreeDots />
           </div>
         </div>
