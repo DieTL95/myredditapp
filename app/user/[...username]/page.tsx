@@ -32,7 +32,7 @@ const UserPage = async (props: { params: Params }) => {
 
   return (
     <Suspense fallback={<UserAndSubSkeleton />}>
-      <div className="flex flex-col max-w-[40vw] w-[40vw] border border-twitter-gray mx-auto box-border">
+      <div className="flex flex-col  ">
         {!userInfo.is_suspended ? (
           <>
             <UserCardComponent userInfo={userInfo} />

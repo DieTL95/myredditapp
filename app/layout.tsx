@@ -30,7 +30,7 @@ export default async function RootLayout({
               </div>
             </div>
             <div className=" flex-2/3 items-start justify-center flex flex-col">
-              <div className="flex flex-col justify-center border border-twitter-gray">
+              <div className="flex flex-col max-w-[40vw] w-[40vw] justify-center border  border-twitter-gray">
                 {children}
               </div>
             </div>

@@ -15,13 +15,11 @@ const TextComponent = ({ post }: { post: string }) => {
     if (innerRef.current && reggedSelf) {
       const replyBody = innerRef.current.querySelector(".replyImage");
 
-      const innerImg = `<Image src=${reggedSelf[2]} width=${300} height=${300} className="pb-1" alt="Inline image" style=${{ maxHeight: "300px", width: "auto" }} />`;
-
-      replyBody
-        ?.querySelector("a")
-        ?.insertAdjacentHTML("beforebegin", innerImg);
-
       if (replyBody) {
+        if (replyBody.querySelector("a")) {
+          replyBody.querySelector("a")!.innerHTML =
+            `<Image src=${reggedSelf[2]} width=${300} height=${300} className="pb-1" alt="Inline image"  />`;
+        }
         replyBody.querySelector("a")?.addEventListener("click", (e: Event) => {
           e.preventDefault();
 
@@ -50,9 +48,7 @@ const TextComponent = ({ post }: { post: string }) => {
       <div
         className={cn(
           "reply",
-          reggedSelf?.input
-            ? "replyImage after:content-['']"
-            : "replyLink after:content-['']"
+          reggedSelf?.input ? "replyImage" : "replyLink after:content-['']"
         )}
         dangerouslySetInnerHTML={{
           __html: DOMPurify.sanitize(
