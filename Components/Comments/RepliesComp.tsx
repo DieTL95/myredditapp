@@ -1,16 +1,13 @@
 import type { Comments } from "@/lib/types";
-import DOMPurify from "dompurify";
-import { marked } from "marked";
 import Link from "next/link";
 import VotesComponent from "../Posts/VotesComp";
 import { FaRegComment } from "react-icons/fa";
 import { cn, relativeTimeFromElapsed } from "@/lib/utils";
 import { TbPin } from "react-icons/tb";
-import { useEffect, useRef, useState } from "react";
 
-import ViewImageComponent from "../Viewers/ViewImgComponent";
 import UserIconComponent from "../Misc/UserIconComp";
 import { FiClock } from "react-icons/fi";
+import TextComponent from "../Misc/TextComp";
 
 const RepliesComponent = ({
   reply,
@@ -21,34 +18,11 @@ const RepliesComponent = ({
   parent?: string;
   userIcon?: string;
 }) => {
-  const innerRef = useRef<HTMLDivElement>(null);
-  const modalRef = useRef<HTMLDialogElement | null>(null);
-
-  const [media, setMedia] = useState<string | undefined>();
-  const regex =
-    /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1.*?(png|gif|jpeg|jpg|webp)/gm;
-  const reggedSelf = regex.exec(reply.body_html);
-
-  useEffect(() => {
-    if (innerRef.current && reggedSelf) {
-      const bod = innerRef.current.querySelector(".replyImage");
-
-      if (bod) {
-        bod.querySelector("a")?.addEventListener("click", (e: Event) => {
-          e.preventDefault();
-
-          setMedia(reggedSelf[2].replace(/&amp;/g, "&"));
-        });
-      }
-    }
-
-    modalRef.current?.showModal();
-  }, [media, reggedSelf]);
   return (
     <div
       className={cn(
         "flex flex-row w-full  pr-4",
-        parent !== "post" && "pl-4 py-2"
+        parent !== "post" && "pl-4 py-2 border-b border-b-twitter-gray"
       )}
     >
       <div className="h-full w-fit mr-[8px] mt-1">
@@ -120,31 +94,7 @@ const RepliesComponent = ({
             )}
           </div>
         </div>
-        {reply.body_html && (
-          <div ref={innerRef}>
-            <div
-              className={cn(
-                "reply",
-                reggedSelf?.input
-                  ? "replyImage after:content-['']"
-                  : "replyLink after:content-['']"
-              )}
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(
-                  marked
-                    .parse(
-                      reply.body_html.replace(/\n(?=\n)/g, "\n\n<br/>\n"),
-                      {
-                        gfm: true,
-                        breaks: true,
-                      }
-                    )
-                    .toString()
-                ),
-              }}
-            />
-          </div>
-        )}
+        {reply.body_html && <TextComponent post={reply.body_html} />}
 
         <div className="flex flex-row gap-0.5">
           <span className="flex-row flex gap-2 items-center">
@@ -156,24 +106,6 @@ const RepliesComponent = ({
             <VotesComponent post={reply} />
           </div>
         </div>
-        {media && (
-          <dialog
-            className="dialog min-w-full  min-h-[100vh] justify-center items-center overflow-x-hidden backdrop:bg-black/85 bg-transparent"
-            ref={modalRef}
-          >
-            <div
-              className=" absolute top-0 bottom-0 right-0 left-0 h-full w-full z-10"
-              onClick={() => {
-                modalRef.current?.close();
-                setMedia(undefined);
-              }}
-            ></div>
-
-            <div>
-              <ViewImageComponent image={media} />
-            </div>
-          </dialog>
-        )}
       </div>
     </div>
   );

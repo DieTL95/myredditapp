@@ -10,7 +10,7 @@ import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { betterFetch } from "@better-fetch/fetch";
 import { base64 } from "@better-auth/utils/base64";
 import type { OAuth2Tokens, ProviderOptions } from "better-auth";
-import type { Post, GalleryMetadata, Gfy } from "./types";
+import type { GalleryMetadata, Gfy, PostData } from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -230,22 +230,22 @@ export async function refreshAccessToken({
   return tokens;
 }
 
-export const mediaHandler = async (postData: Post, domain: string) => {
+export const mediaHandler = async (post: PostData, domain: string) => {
   switch (domain) {
     case "i.redd.it":
       console.log("deine mutter");
-      return postData.data.url;
+      return post.url;
 
     case "reddit.com":
       console.log("deiner Vatah");
       let mediaObject;
       const moredata: GalleryMetadata[] = [];
 
-      if (postData.data.crosspost_parent_list) {
-        mediaObject = postData.data.crosspost_parent_list[0]
+      if (post.crosspost_parent_list) {
+        mediaObject = post.crosspost_parent_list[0]
           .media_metadata as GalleryMetadata[];
-      } else if (!postData.data.crosspost_parent) {
-        mediaObject = postData.data.media_metadata as GalleryMetadata[];
+      } else if (!post.crosspost_parent) {
+        mediaObject = post.media_metadata as GalleryMetadata[];
       }
 
       if (!mediaObject) {
@@ -263,15 +263,15 @@ export const mediaHandler = async (postData: Post, domain: string) => {
 
     case "v.redd.it":
       console.log("deiner Arsch");
-      if (postData.data.crosspost_parent_list !== undefined) {
-        return postData.data.crosspost_parent_list[0].media.reddit_video;
+      if (post.crosspost_parent_list !== undefined) {
+        return post.crosspost_parent_list[0].media.reddit_video;
       } else {
-        return postData.data.media?.reddit_video;
+        return post.media?.reddit_video;
       }
 
     case "redgifs.com":
     case "v3.redgifs.com":
-      const url = postData.data.url;
+      const url = post.url;
       const regex = /(?:(?:ifr|watch|i)\/)(\w+)/gm;
 
       const id = regex.exec(url);
@@ -289,57 +289,6 @@ export const mediaHandler = async (postData: Post, domain: string) => {
 
     default:
       break;
-  }
-};
-
-export const notMedia = async (postData: Post, domain: string) => {
-  if (domain === "reddit.com") {
-    let mediaObject;
-    const moredata: GalleryMetadata[] = [];
-
-    if (postData.data.crosspost_parent_list) {
-      mediaObject = postData.data.crosspost_parent_list[0]
-        .media_metadata as GalleryMetadata[];
-    } else if (!postData.data.crosspost_parent) {
-      mediaObject = postData.data.media_metadata as GalleryMetadata[];
-    }
-
-    if (!mediaObject) {
-      return;
-    }
-
-    for (const element in mediaObject as GalleryMetadata[]) {
-      const data = mediaObject[element];
-      console.log(data);
-      if (data.status === "valid") {
-        moredata.push(data);
-      }
-    }
-    return moredata;
-  } else if (domain === "i.redd.it") {
-    return postData.data.url;
-  } else if (domain === "v.redd.it") {
-    if (postData.data.crosspost_parent_list !== undefined) {
-      return postData.data.crosspost_parent_list[0].media.reddit_video;
-    } else {
-      return postData.data.media?.reddit_video;
-    }
-  } else if (domain.includes("redgifs.com")) {
-    const url = postData.data.url;
-    const regex = /(?:(?:ifr|watch|i)\/)(\w+)/gm;
-
-    const id = regex.exec(url);
-    if (!id) {
-      return "null";
-    }
-    console.log(id);
-
-    const gif: Gfy = await fetchRedgifsAction(id[1]);
-
-    console.log("Utils: ", gif);
-    if (gif) {
-      return gif;
-    }
   }
 };
 
