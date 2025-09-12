@@ -14,9 +14,9 @@ import {
   IoMdVolumeHigh,
   IoMdVolumeOff,
 } from "react-icons/io";
-import { FiZoomIn } from "react-icons/fi";
 import DialogVideoComponent from "./DialogVidComp";
 import { PiSpinner } from "react-icons/pi";
+import { TbArrowsDiagonalMinimize2, TbArrowsDiagonal } from "react-icons/tb";
 
 const VideoPlayerComponent = ({
   url,
@@ -32,6 +32,7 @@ const VideoPlayerComponent = ({
   poster?: string;
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [zoomed, setZoomed] = useState(false);
   const [loadedDuration, setLoadedDuration] = useState<number>();
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [volume, setVolume] = useState<number>();
@@ -131,16 +132,15 @@ const VideoPlayerComponent = ({
     }
   };
   const handleZoom = () => {
-    if (
-      videoRef.current?.classList.contains("zoomed") ||
-      videoRef.current?.classList.contains("h-screen")
-    ) {
-      videoRef.current.classList.remove("zoomed", "h-screen");
+    if (zoomed) {
+      videoRef.current?.classList.remove("zoomed", "h-screen");
+      setZoomed(false);
     } else if (videoRef.current && height > document.body.clientHeight) {
-      console.log(height, " ", document.body.clientHeight);
       videoRef.current?.classList.add("zoomed");
+      setZoomed(true);
     } else {
       videoRef.current?.classList.add("h-screen");
+      setZoomed(true);
     }
   };
   useEffect(() => {
@@ -160,7 +160,6 @@ const VideoPlayerComponent = ({
       (enteries) => {
         enteries.forEach(async (entry) => {
           if (isPlaying && entry.intersectionRatio === 0) {
-            console.log(entry);
             video?.pause();
             setIsPlaying(false);
           }
@@ -178,6 +177,7 @@ const VideoPlayerComponent = ({
       setIsPlaying(false);
       setCondition(false);
       video?.classList.remove("zoomed", "h-screen");
+      setZoomed(false);
     });
     video?.addEventListener("playing", () => {
       video.classList.add("visible");
@@ -190,6 +190,7 @@ const VideoPlayerComponent = ({
         setIsPlaying(false);
         setCondition(false);
         video?.classList.remove("zoomed", "h-screen");
+        setZoomed(false);
       });
       video?.removeEventListener("playing", () => {
         video.classList.add("visible");
@@ -219,14 +220,6 @@ const VideoPlayerComponent = ({
         {portalNode && (
           <portals.InPortal node={portalNode}>
             <div className=" h-full w-full">
-              {document.querySelector("dialog")?.open && (
-                <div
-                  className="absolute  top-0 right-0 text-white text-lg z-40 hover:scale-110 "
-                  onClick={handleZoom}
-                >
-                  <FiZoomIn />
-                </div>
-              )}
               {videoRef.current?.seeking && (
                 <div className=" flex  w-full justify-center absolute top-[50%]  ">
                   <PiSpinner
@@ -342,6 +335,18 @@ const VideoPlayerComponent = ({
                     </>
                   ) : (
                     <IoMdVolumeOff />
+                  )}
+                  {condition && (
+                    <div
+                      className=" text-white text-2xl z-40 hover:scale-110 "
+                      onClick={handleZoom}
+                    >
+                      {zoomed ? (
+                        <TbArrowsDiagonalMinimize2 />
+                      ) : (
+                        <TbArrowsDiagonal />
+                      )}
+                    </div>
                   )}
                   <div onClick={handleFullscreen} className="button ">
                     <IoMdExpand />

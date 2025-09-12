@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import UserAndSubSkeleton from "@/Components/LoadingSkeletons/UserSubSkeleton";
 import SubLinksComp from "@/Components/Subreddits/SubLinksComp";
+import SidebarComponent from "@/Components/Misc/SidebarComp";
 
 type Params = Promise<{ sub: string[] }>;
 type Props = {
@@ -58,10 +59,13 @@ const SubredditPage = async (props: { params: Params }) => {
     <CommentsComponent params={[...sub]} />
   ) : (
     <Suspense fallback={<UserAndSubSkeleton />}>
-      <div className="border border-twitter-gray max-w-[40vw] mx-auto">
-        {sub[0] !== "friends" && <SubCardComponent sub={subInfo} />}
-        <SubLinksComp sub={sub} />
-        <SubPathComponent subreddit={sub[0]} sort={sub[1]} />
+      <div className="flex flex-row">
+        <div className="border border-twitter-gray max-w-[40vw] mx-auto">
+          {sub[0] !== "friends" && <SubCardComponent sub={subInfo} />}
+          <SubLinksComp sub={sub} />
+          <SubPathComponent subreddit={sub[0]} sort={sub[1]} />
+        </div>
+        {subInfo && <SidebarComponent subInfo={subInfo} />}
       </div>
     </Suspense>
   );

@@ -5,8 +5,16 @@ import { useEffect, useState } from "react";
 import { BsFullscreenExit } from "react-icons/bs";
 import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 
-const GalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
-  const [currentImg, setCurrentImg] = useState(0);
+const GalleryComponent = ({
+  media,
+  currentImg,
+  changeImg,
+}: {
+  media: GalleryMetadata[];
+  currentImg: number;
+  changeImg: () => void;
+}) => {
+  // const [currentImg, setCurrentImg] = useState(0);
   const [viewFull, setViewFull] = useState<boolean>();
   useEffect(() => {
     const view = localStorage.getItem("viewModeFull");
@@ -30,10 +38,10 @@ const GalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
 
   addEventListener("keyup", (e) => {
     if (e.code === "ArrowRight") {
-      setCurrentImg(currentImg === media.length - 1 ? 0 : currentImg + 1);
+      changeImg();
     }
     if (e.code === "ArrowLeft") {
-      setCurrentImg(currentImg === 0 ? media.length - 1 : currentImg - 1);
+      changeImg();
     }
   });
   console.log("Localstorage: ", localStorage.getItem("viewModeFull"));
@@ -47,24 +55,12 @@ const GalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
         <div className="flex items-center max-h-screen  h-full min-w-screen ">
           <>
             <div className=" absolute top-[50%] h-10 right-0 z-50 hover:scale-110">
-              <button
-                onClick={() =>
-                  setCurrentImg(
-                    currentImg === media.length - 1 ? 0 : currentImg + 1
-                  )
-                }
-              >
+              <button onClick={changeImg}>
                 <FaArrowCircleRight className="text-2xl text-white" />
               </button>
             </div>
             <div className=" absolute top-[50%] h-10 left-0 z-50 hover:scale-110">
-              <button
-                onClick={() =>
-                  setCurrentImg(
-                    currentImg === 0 ? media.length - 1 : currentImg - 1
-                  )
-                }
-              >
+              <button onClick={changeImg}>
                 <FaArrowCircleLeft className="text-2xl text-white" />
               </button>
             </div>
@@ -110,7 +106,6 @@ const GalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
                   {media.map((obj, index) => (
                     <div
                       key={index}
-                      onClick={() => setCurrentImg(index)}
                       className={cn(
                         "border cursor-pointer hover:border-indigo-300 z-100   transition-all ease-linear opacity-50 scale-75",
                         currentImg === index && "opacity-100 scale-100"

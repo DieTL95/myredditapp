@@ -10,7 +10,6 @@ const TextComponent = ({ post }: { post: string }) => {
   const regex =
     /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1.*?(png|gif|jpeg|jpg|webp)/gm;
   const reggedSelf = regex.exec(post);
-  console.log(reggedSelf);
   useEffect(() => {
     if (innerRef.current && reggedSelf) {
       const replyBody = innerRef.current.querySelector(".replyImage");

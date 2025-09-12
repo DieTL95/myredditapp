@@ -233,7 +233,17 @@ export async function refreshAccessToken({
 export const mediaHandler = async (post: PostData, domain: string) => {
   switch (domain) {
     case "i.redd.it":
-      console.log("deine mutter");
+      // if (post.preview?.images[0].variants.gif) {
+      //   return {
+      //     fallback_url: post.preview?.images[0].variants.mp4.source.url,
+      //     width: post.preview?.images[0].variants.mp4.source.width,
+      //     height: post.preview?.images[0].variants.mp4.source.height,
+      //     duration: undefined,
+
+      //     dash_url: undefined,
+      //     has_audio: false,
+      //   };
+      // } else {
       return post.url;
 
     case "reddit.com":

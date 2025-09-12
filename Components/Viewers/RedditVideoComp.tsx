@@ -3,10 +3,10 @@ import VideoPlayerComponent from "./VideoPlayer";
 
 interface Video {
   fallback_url: string;
-  duration: number;
+  duration?: number;
   width: number;
   height: number;
-  dash_url: string;
+  dash_url?: string;
   has_audio: boolean;
 }
 
@@ -84,7 +84,7 @@ const RedditVideoComp = ({
       ></div>
       <VideoPlayerComponent
         url={video.fallback_url}
-        duration={video.duration}
+        duration={video.duration || 0}
         hasAudio={video.has_audio}
         poster={poster?.images[0].source.url}
         height={video.height}

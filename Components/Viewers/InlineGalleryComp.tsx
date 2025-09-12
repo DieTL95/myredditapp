@@ -1,11 +1,18 @@
 import type { GalleryMetadata } from "@/lib/types";
 
 import Image from "next/image";
-import { useState } from "react";
 import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 
-const InlineGalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
-  const [currentImg, setCurrentImg] = useState(0);
+const InlineGalleryComponent = ({
+  media,
+  currentImg,
+  changeImg,
+}: {
+  media: GalleryMetadata[];
+  currentImg: number;
+  changeImg: () => void;
+}) => {
+  // const [currentImg, setCurrentImg] = useState(0);
   //   const nextImgHandler = () => {
   //     addEventListener("keyup", (e) => {
   //       if (e.code === "ArrowRight") {
@@ -29,9 +36,7 @@ const InlineGalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setCurrentImg(
-                  currentImg === media.length - 1 ? 0 : currentImg + 1
-                );
+                changeImg();
               }}
             >
               <FaArrowCircleRight className="text-2xl text-white" />
@@ -41,10 +46,7 @@ const InlineGalleryComponent = ({ media }: { media: GalleryMetadata[] }) => {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-
-                setCurrentImg(
-                  currentImg === 0 ? media.length - 1 : currentImg - 1
-                );
+                changeImg();
               }}
             >
               <FaArrowCircleLeft className="text-2xl text-white" />

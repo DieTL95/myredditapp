@@ -22,7 +22,6 @@ const SearchResultsComponent = ({
     isFetching,
     isLoading,
   } = usePosts(query, sort, redditType);
-  console.log(data);
   return isPending ? (
     <PostsSkeleton />
   ) : (

@@ -1,9 +1,9 @@
 import { auth } from "@/utils/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
-import Image from "next/image";
 import db from "@/utils/prisma";
 import { redirect } from "next/navigation";
+import DropdownComponent from "./DropdownComp";
 const NavUserComponent = async () => {
   const session = await auth.api.getSession({
     headers: await headers(), // you need to pass the headers object.
@@ -53,21 +53,10 @@ const NavUserComponent = async () => {
 
   return (
     <div>
-      {!session?.user ? (
+      {!user ? (
         <Link href="/signin">Signin</Link>
       ) : (
-        <Link className="flex flex-row gap-2" href="/user/me">
-          <Image
-            src={image!}
-            width={0}
-            height={0}
-            sizes="100px"
-            className="rounded-[50%]"
-            style={{ maxHeight: "30px", width: "auto" }}
-            alt={user!}
-          />
-          {user}
-        </Link>
+        <DropdownComponent user={user} image={image} />
       )}
     </div>
   );

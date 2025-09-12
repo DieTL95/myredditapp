@@ -6,20 +6,19 @@ import {
   secMinHrConvert,
 } from "@/lib/utils";
 import Image from "next/image";
-import InlineGalleryComponent from "../Viewers/InlineGalleryComp";
 import RedditVideoComp from "../Viewers/RedditVideoComp";
 import RedgifsComponent from "../Viewers/RedgifsComponent";
-import { useRef, useEffect, useState } from "react";
-import GalleryComponent from "../Viewers/GalleryComp";
-import ViewImageComponent from "../Viewers/ViewImgComponent";
+import { useState } from "react";
+
+import ParentGallery from "../Viewers/ParentGallery";
 
 type MediaType = Gfy | Video | GalleryMetadata[] | string;
 type Video = {
   fallback_url: string;
-  duration: number;
+  duration?: number;
   width: number;
   height: number;
-  dash_url: string;
+  dash_url?: string;
   has_audio: boolean;
 };
 
@@ -27,7 +26,6 @@ const MediaComponent = ({ post }: { post: PostData }) => {
   const [openPostIndex, setOpenPostIndex] = useState<string>();
   // const [mediaImages, setMediaImages] = useState<ImagesType>();
   // const [mediaVids, setMediaVids] = useState<VideosType>();
-  const imgModalRef = useRef<HTMLDialogElement | null>(null);
   const [media, setMedia] = useState<MediaType>();
 
   const openMedia = async (
@@ -50,27 +48,28 @@ const MediaComponent = ({ post }: { post: PostData }) => {
     console.log(meddy);
   };
 
-  useEffect(() => {
-    if (!media) {
-      return;
-    }
-    if (post.domain === "reddit.com" || post.domain === "i.redd.it") {
-      imgModalRef.current?.showModal();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [media]);
+  // useEffect(() => {
+  //   if (!media) {
+  //     return;
+  //   }
+  //   if (post.domain === "i.redd.it") {
+  //     imgModalRef.current?.showModal();
+  //   }
 
-  const inlineGalHandler = (postData: PostData) => {
-    const mediaObject = postData.media_metadata as GalleryMetadata[];
-    const moredata: GalleryMetadata[] = [];
-    for (const element in mediaObject) {
-      const data = mediaObject[element];
-      if (data.status === "valid") {
-        moredata.push(data);
-      }
-    }
-    return moredata;
-  };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [media]);
+
+  // const inlineGalHandler = (postData: PostData) => {
+  //   const mediaObject = postData.media_metadata as GalleryMetadata[];
+  //   const moredata: GalleryMetadata[] = [];
+  //   for (const element in mediaObject) {
+  //     const data = mediaObject[element];
+  //     if (data.status === "valid") {
+  //       moredata.push(data);
+  //     }
+  //   }
+  //   return moredata;
+  // };
 
   return (
     <>
@@ -99,16 +98,31 @@ const MediaComponent = ({ post }: { post: PostData }) => {
               gif={media as Gfy}
               thumbnail={post.preview?.images}
             />
-          ) : post.is_gallery &&
-            post.gallery_data &&
-            post.gallery_data?.items.length > 1 ? (
-            <InlineGalleryComponent media={inlineGalHandler(post)} />
-          ) : post.crosspost_parent_list &&
-            post.crosspost_parent_list[0]?.gallery_data?.items?.length ? (
-            <InlineGalleryComponent
-              media={inlineGalHandler(post.crosspost_parent_list[0])}
+          ) : post.is_gallery ||
+            (post.crosspost_parent_list &&
+              post.crosspost_parent_list[0]?.gallery_data?.items?.length) ? (
+            <ParentGallery
+              post={post}
+              media={media as GalleryMetadata[]}
+              postIndex={openPostIndex}
+              undefineMedia={() => setMedia(undefined)}
             />
-          ) : post.preview ? (
+          ) : // <InlineGalleryComponent
+          //   media={inlineGalHandler(
+          //     post.crosspost_parent_list
+          //       ? post.crosspost_parent_list[0]
+          //       : post
+          //   )}
+          //   currentImg={currentImg}
+          //   changeImg={() =>
+          //     setCurrentImg(
+          //       currentImg === inlineGalHandler(post).length - 1
+          //         ? 0
+          //         : currentImg + 1
+          //     )
+          //   }
+          // />
+          post.preview ? (
             post.preview.images[0] && (
               <div className="flex flex-col h-full gap-2 relative z-100 rounded-[16px]">
                 <Image
@@ -186,10 +200,10 @@ const MediaComponent = ({ post }: { post: PostData }) => {
           )}
         </div>
       </div>
-      {openPostIndex === post.id &&
+      {/* {openPostIndex === post.id &&
         !post.is_self &&
         media &&
-        (post.domain === "i.redd.it" || post.domain === "reddit.com") && (
+        post.domain === "i.redd.it" && (
           <dialog
             className="dialog min-w-full  min-h-[100vh] justify-center items-center overflow-x-hidden backdrop:bg-black/85 bg-transparent"
             ref={imgModalRef}
@@ -203,15 +217,13 @@ const MediaComponent = ({ post }: { post: PostData }) => {
             ></div>
 
             <div>
-              {media && post.domain === "reddit.com" && (
-                <GalleryComponent media={media as GalleryMetadata[]} />
-              )}
+        
               {media && post.domain === "i.redd.it" && (
                 <ViewImageComponent image={media as string} />
               )}
             </div>
           </dialog>
-        )}
+        )} */}
     </>
   );
 };

@@ -46,9 +46,6 @@ const SubSearchComponent = () => {
   const handleOutsideClick = (e: Event) => {
     const target = e.target as Element;
 
-    const searchResult = document.getElementById("#searchResult");
-    console.log(target);
-    console.log(target.contains(searchResult));
     if (
       searchRef.current &&
       (!searchRef.current.contains(target) || target.id === "searchResult")

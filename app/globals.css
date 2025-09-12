@@ -120,10 +120,13 @@ display: flex;
 .vidPlayer > div {
 height: 100%;
 }
-.dialog > div {
+.dialog > .backdrop {
 height: 100%;
 }
 
+.dialog:has(.zoomed) .xbutton {
+position: sticky;
+left: 100%;}
 .gal-prev::before {
 content: "";
   width: 50%;
