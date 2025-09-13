@@ -8,9 +8,11 @@ import {
 import Image from "next/image";
 import RedditVideoComp from "../Viewers/RedditVideoComp";
 import RedgifsComponent from "../Viewers/RedgifsComponent";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ParentGallery from "../Viewers/ParentGallery";
+import PlayIconComponent from "./PlayIcon";
+import ViewImageComponent from "../Viewers/ViewImgComponent";
 
 type MediaType = Gfy | Video | GalleryMetadata[] | string;
 type Video = {
@@ -71,6 +73,29 @@ const MediaComponent = ({ post }: { post: PostData }) => {
   //   return moredata;
   // };
 
+  useEffect(() => {
+    const dialog = document.querySelector("dialog");
+    if (!media) {
+      return;
+    }
+
+    if (dialog?.open) {
+      document.getElementById("thing")?.addEventListener("click", () => {
+        dialog?.close();
+        setMedia(undefined);
+      });
+    }
+
+    return () => {
+      if (dialog?.open) {
+        document.getElementById("thing")?.removeEventListener("click", () => {
+          dialog?.close();
+          setMedia(undefined);
+        });
+      }
+    };
+  }, [media]);
+
   return (
     <>
       <div
@@ -105,7 +130,6 @@ const MediaComponent = ({ post }: { post: PostData }) => {
               post={post}
               media={media as GalleryMetadata[]}
               postIndex={openPostIndex}
-              undefineMedia={() => setMedia(undefined)}
             />
           ) : // <InlineGalleryComponent
           //   media={inlineGalHandler(
@@ -147,22 +171,7 @@ const MediaComponent = ({ post }: { post: PostData }) => {
                 {(post.post_hint.includes("video") ||
                   post.preview.images[0].variants.gif) && (
                   <div className="absolute flex justify-center  items-center  top-[45%] right-[45%] my-auto w-16 h-16 mx-auto z-100">
-                    <svg viewBox="0 0 60 61" aria-hidden="true">
-                      <g>
-                        <circle
-                          cx="30"
-                          cy="30.4219"
-                          fill="#333333"
-                          opacity="0.6"
-                          className="hover:opacity-80"
-                          r="30"
-                        ></circle>
-                        <path
-                          d="M22.2275 17.1971V43.6465L43.0304 30.4218L22.2275 17.1971Z"
-                          fill="white"
-                        ></path>
-                      </g>
-                    </svg>
+                    <PlayIconComponent />
                   </div>
                 )}
                 {post.media?.reddit_video?.duration && (
@@ -200,6 +209,9 @@ const MediaComponent = ({ post }: { post: PostData }) => {
           )}
         </div>
       </div>
+      {media && post.domain === "i.redd.it" && (
+        <ViewImageComponent image={media as string} />
+      )}
       {/* {openPostIndex === post.id &&
         !post.is_self &&
         media &&

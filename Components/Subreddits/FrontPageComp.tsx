@@ -4,38 +4,38 @@ import { useFrontPage } from "@/lib/utils";
 import type { QueriesPages } from "@/lib/types";
 import LoaderComponent from "../Misc/LoaderComp";
 import FeedPostsComp from "../Posts/FeedPostsComp";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import PostsSkeleton from "../LoadingSkeletons/PostsSkeleton";
 
 const FrontPageComponent = () => {
   const {
     data,
     fetchNextPage,
-    isFetchingNextPage,
+    // isFetchingNextPage,
     hasNextPage,
     isFetching,
     isLoading,
   } = useFrontPage();
 
-  useEffect(() => {
-    const div = document.getElementById("loadMoreDiv");
+  // useEffect(() => {
+  //   const div = document.getElementById("loadMoreDiv");
 
-    if (div) {
-      console.log("next");
-      const observer = new IntersectionObserver((enteries) => {
-        enteries.forEach((entry) => {
-          if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-            console.log(entry);
-            fetchNextPage();
-          }
-        });
-      });
+  //   if (div) {
+  //     console.log("next");
+  //     const observer = new IntersectionObserver((enteries) => {
+  //       enteries.forEach((entry) => {
+  //         if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+  //           console.log(entry);
+  //           fetchNextPage();
+  //         }
+  //       });
+  //     });
 
-      observer.observe(div);
+  //     observer.observe(div);
 
-      return () => observer.unobserve(div);
-    }
-  }, [data, fetchNextPage, hasNextPage, isFetchingNextPage]);
+  //     return () => observer.unobserve(div);
+  //   }
+  // }, [data, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   console.log(isFetching, isLoading);
 

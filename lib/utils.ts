@@ -248,23 +248,13 @@ export const mediaHandler = async (post: PostData, domain: string) => {
 
     case "reddit.com":
       console.log("deiner Vatah");
-      let mediaObject;
+      const mediaObject: GalleryMetadata[] = post.crosspost_parent_list
+        ? post.crosspost_parent_list[0].media_metadata
+        : post.media_metadata;
       const moredata: GalleryMetadata[] = [];
-
-      if (post.crosspost_parent_list) {
-        mediaObject = post.crosspost_parent_list[0]
-          .media_metadata as GalleryMetadata[];
-      } else if (!post.crosspost_parent) {
-        mediaObject = post.media_metadata as GalleryMetadata[];
-      }
-
-      if (!mediaObject) {
-        return;
-      }
 
       for (const element in mediaObject as GalleryMetadata[]) {
         const data = mediaObject[element];
-        console.log(data);
         if (data.status === "valid") {
           moredata.push(data);
         }

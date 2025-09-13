@@ -6,11 +6,13 @@ import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 const InlineGalleryComponent = ({
   media,
   currentImg,
-  changeImg,
+  nextImage,
+  prevImage,
 }: {
   media: GalleryMetadata[];
   currentImg: number;
-  changeImg: () => void;
+  nextImage: () => void;
+  prevImage: () => void;
 }) => {
   // const [currentImg, setCurrentImg] = useState(0);
   //   const nextImgHandler = () => {
@@ -36,7 +38,7 @@ const InlineGalleryComponent = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                changeImg();
+                nextImage();
               }}
             >
               <FaArrowCircleRight className="text-2xl text-white" />
@@ -46,7 +48,7 @@ const InlineGalleryComponent = ({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                changeImg();
+                prevImage();
               }}
             >
               <FaArrowCircleLeft className="text-2xl text-white" />

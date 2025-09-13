@@ -131,6 +131,7 @@ const VideoPlayerComponent = ({
       setCondition(true);
     }
   };
+
   const handleZoom = () => {
     if (zoomed) {
       videoRef.current?.classList.remove("zoomed", "h-screen");
@@ -172,6 +173,18 @@ const VideoPlayerComponent = ({
 
     observer.observe(video!);
 
+    const handleOutsideClick = (e: Event) => {
+      const target = e.target as Element;
+
+      if (video && !video.contains(target)) {
+        document.querySelector("dialog")?.close();
+      }
+    };
+
+    document
+      .querySelector("dialog")
+      ?.addEventListener("click", handleOutsideClick);
+
     document.querySelector("dialog")?.addEventListener("close", () => {
       video?.pause();
       setIsPlaying(false);
@@ -185,6 +198,9 @@ const VideoPlayerComponent = ({
     video?.addEventListener("timeupdate", updateTime);
 
     return () => {
+      document
+        .querySelector("dialog")
+        ?.removeEventListener("click", handleOutsideClick);
       document.querySelector("dialog")?.removeEventListener("close", () => {
         video?.pause();
         setIsPlaying(false);
@@ -252,104 +268,116 @@ const VideoPlayerComponent = ({
 
               <div
                 className={cn(
-                  "controls z-100 flex absolute px-8 bottom-0 left-0 invisible rounded-[16px] transition delay-500 group-hover:ease-linear group-hover:delay-100 group-hover:visible w-full justify-between items-center text-2xl bg-linear-to-t from-black/90 to-black/0 text-white",
+                  "controls z-100 cursor-default flex flex-col absolute px-4 bottom-0 left-0 invisible rounded-[16px] transition delay-500 group-hover:ease-linear group-hover:delay-100 group-hover:visible w-full justify-between items-center text-2xl bg-linear-to-t from-black/90 to-black/0 text-white",
                   !isPlaying && "visible"
                 )}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex min-w-fit">
-                  <div>
-                    {isPlaying ? (
-                      <button
-                        type="button"
-                        className=" button"
-                        onClick={handlePlay}
-                      >
-                        <IoIosPause />
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="button"
-                        onClick={handlePlay}
-                      >
-                        <IoMdPlay />
-                      </button>
-                    )}
+                <div className="w-full">
+                  <div className="flex w-full items-center">
+                    <div className="progress w-full flex h-full items-center">
+                      <input
+                        className="w-full cursor-pointer"
+                        type="range"
+                        name="progress"
+                        id="progress"
+                        min="0"
+                        max={Math.round(duration)}
+                        value={currentTime}
+                        onChange={(e) => handleSeek(Number(e.target.value))}
+                      />
+                    </div>
                   </div>
-                  {duration && (
-                    <div className="text-lg p-1">
-                      {secMinHrConvert(currentTime)} /{" "}
-                      {secMinHrConvert(
-                        !loadedDuration ? duration : loadedDuration
+                </div>
+                <div className="w-full justify-between flex flex-row">
+                  <div className="flex min-w-fit">
+                    <div>
+                      {isPlaying ? (
+                        <button
+                          type="button"
+                          className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
+                          onClick={handlePlay}
+                        >
+                          <div>
+                            <IoIosPause />
+                          </div>
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
+                          onClick={handlePlay}
+                        >
+                          <div className="">
+                            <IoMdPlay className="ml-[4px]" />
+                          </div>
+                        </button>
                       )}
                     </div>
-                  )}
-                </div>
-                <div className="flex w-full mx-2 items-center">
-                  <div className="progress w-full flex h-full items-center">
-                    <input
-                      className="w-full"
-                      type="range"
-                      name="progress"
-                      id="progress"
-                      min="0"
-                      max={Math.round(duration)}
-                      value={currentTime}
-                      onChange={(e) => handleSeek(Number(e.target.value))}
-                    />
-                  </div>
-                </div>
-                <div className=" flex group/volume">
-                  {" "}
-                  {hasAudio ? (
-                    <>
-                      <div>
-                        <div className="volume invisible group-hover/volume:visible relative max-h-20">
-                          <input
-                            className="absolute max-h-20 bottom-0 "
-                            type="range"
-                            name="volume"
-                            id="volume"
-                            min="0"
-                            max="100"
-                            value={volume || 0}
-                            onChange={(e) =>
-                              handleVolume(Number(e.target.value))
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div
-                        className=" button block"
-                        onClick={hasAudio ? hanleMute : () => ""}
-                      >
-                        {volume === 0 ||
-                        videoRef.current?.volume == undefined ||
-                        videoRef.current.muted ? (
-                          <IoMdVolumeOff />
-                        ) : (
-                          <IoMdVolumeHigh />
+                    {duration && (
+                      <div className="text-lg p-1 cursor-default">
+                        {secMinHrConvert(currentTime)} /{" "}
+                        {secMinHrConvert(
+                          !loadedDuration ? duration : loadedDuration
                         )}
                       </div>
-                    </>
-                  ) : (
-                    <IoMdVolumeOff />
-                  )}
-                  {condition && (
+                    )}
+                  </div>
+
+                  <div className=" flex group/volume">
+                    {" "}
+                    {hasAudio ? (
+                      <>
+                        <div>
+                          <div className="volume invisible group-hover/volume:visible relative max-h-20">
+                            <input
+                              className="absolute max-h-20 bottom-0 "
+                              type="range"
+                              name="volume"
+                              id="volume"
+                              min="0"
+                              max="100"
+                              value={volume || 0}
+                              onChange={(e) =>
+                                handleVolume(Number(e.target.value))
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div
+                          className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
+                          onClick={hasAudio ? hanleMute : () => ""}
+                        >
+                          {volume === 0 ||
+                          videoRef.current?.volume == undefined ||
+                          videoRef.current.muted ? (
+                            <IoMdVolumeOff />
+                          ) : (
+                            <IoMdVolumeHigh />
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <IoMdVolumeOff />
+                    )}
+                    {condition && (
+                      <div
+                        className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
+                        onClick={handleZoom}
+                      >
+                        {zoomed ? (
+                          <TbArrowsDiagonalMinimize2 />
+                        ) : (
+                          <TbArrowsDiagonal />
+                        )}
+                      </div>
+                    )}
                     <div
-                      className=" text-white text-2xl z-40 hover:scale-110 "
-                      onClick={handleZoom}
+                      onClick={handleFullscreen}
+                      className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
                     >
-                      {zoomed ? (
-                        <TbArrowsDiagonalMinimize2 />
-                      ) : (
-                        <TbArrowsDiagonal />
-                      )}
+                      <IoMdExpand />
                     </div>
-                  )}
-                  <div onClick={handleFullscreen} className="button ">
-                    <IoMdExpand />
                   </div>
                 </div>
               </div>

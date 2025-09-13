@@ -8,11 +8,13 @@ import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 const GalleryComponent = ({
   media,
   currentImg,
-  changeImg,
+  nextImage,
+  prevImage,
 }: {
   media: GalleryMetadata[];
   currentImg: number;
-  changeImg: () => void;
+  nextImage: () => void;
+  prevImage: () => void;
 }) => {
   // const [currentImg, setCurrentImg] = useState(0);
   const [viewFull, setViewFull] = useState<boolean>();
@@ -38,10 +40,10 @@ const GalleryComponent = ({
 
   addEventListener("keyup", (e) => {
     if (e.code === "ArrowRight") {
-      changeImg();
+      nextImage();
     }
     if (e.code === "ArrowLeft") {
-      changeImg();
+      prevImage();
     }
   });
   console.log("Localstorage: ", localStorage.getItem("viewModeFull"));
@@ -55,12 +57,12 @@ const GalleryComponent = ({
         <div className="flex items-center max-h-screen  h-full min-w-screen ">
           <>
             <div className=" absolute top-[50%] h-10 right-0 z-50 hover:scale-110">
-              <button onClick={changeImg}>
+              <button onClick={nextImage}>
                 <FaArrowCircleRight className="text-2xl text-white" />
               </button>
             </div>
             <div className=" absolute top-[50%] h-10 left-0 z-50 hover:scale-110">
-              <button onClick={changeImg}>
+              <button onClick={prevImage}>
                 <FaArrowCircleLeft className="text-2xl text-white" />
               </button>
             </div>

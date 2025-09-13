@@ -33,6 +33,22 @@ export type PostData = {
   over_18: boolean;
   permalink: string;
   post_hint: string;
+  poll_data: {
+    prediction_status: null;
+    tournament_id: null;
+    voting_end_timestamp: number;
+    total_vote_count: number;
+    vote_updates_remained: null;
+    is_prediction: boolean;
+    resolved_option_id: null;
+    user_won_amount: null;
+    user_selection: null;
+    options: {
+      text: string;
+      id: string;
+    }[];
+    total_stake_amount: null;
+  };
   score: number;
   selftext: string;
   selftext_html: string;

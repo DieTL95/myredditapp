@@ -5,13 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import ViewImageComponent from "../Viewers/ViewImgComponent";
 const TextComponent = ({ post }: { post: string }) => {
   const innerRef = useRef<HTMLDivElement>(null);
-  const modalRef = useRef<HTMLDialogElement | null>(null);
   const [media, setMedia] = useState<string | undefined>();
   const regex =
     /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1.*?(png|gif|jpeg|jpg|webp)/gm;
   const reggedSelf = regex.exec(post);
   useEffect(() => {
     if (innerRef.current && reggedSelf) {
+      const dialog = document.querySelector("dialog");
+
       const replyBody = innerRef.current.querySelector(".replyImage");
 
       if (replyBody) {
@@ -26,9 +27,20 @@ const TextComponent = ({ post }: { post: string }) => {
         });
       }
 
-      modalRef.current?.showModal();
+      if (dialog?.open) {
+        document.getElementById("thing")?.addEventListener("click", () => {
+          dialog?.close();
+          setMedia(undefined);
+        });
+      }
 
       return () => {
+        if (dialog?.open) {
+          document.getElementById("thing")?.removeEventListener("click", () => {
+            dialog?.close();
+            setMedia(undefined);
+          });
+        }
         if (replyBody) {
           replyBody
             .querySelector("a")
@@ -60,24 +72,7 @@ const TextComponent = ({ post }: { post: string }) => {
           ),
         }}
       />
-      {media && (
-        <dialog
-          className="dialog min-w-full  min-h-[100vh] justify-center items-center overflow-x-hidden backdrop:bg-black/85 bg-transparent"
-          ref={modalRef}
-        >
-          <div
-            className=" absolute top-0 bottom-0 right-0 left-0 h-full w-full z-10"
-            onClick={() => {
-              modalRef.current?.close();
-              setMedia(undefined);
-            }}
-          ></div>
-
-          <div>
-            <ViewImageComponent image={media} />
-          </div>
-        </dialog>
-      )}
+      {media && <ViewImageComponent image={media} />}
     </div>
   );
 };
