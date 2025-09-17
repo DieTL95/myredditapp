@@ -60,7 +60,7 @@ const VideoPlayerComponent = ({
     }
   };
 
-  const hanleMute = () => {
+  const handleMute = () => {
     const video = videoRef.current;
     if (!video) {
       return;
@@ -268,7 +268,7 @@ const VideoPlayerComponent = ({
 
               <div
                 className={cn(
-                  "controls z-100 cursor-default flex flex-col absolute px-4 bottom-0 left-0 invisible rounded-[16px] transition delay-500 group-hover:ease-linear group-hover:delay-100 group-hover:visible w-full justify-between items-center text-2xl bg-linear-to-t from-black/90 to-black/0 text-white",
+                  "controls z-100 flex flex-col absolute px-4 bottom-0 left-0 invisible rounded-[16px] transition delay-500 group-hover:ease-linear group-hover:delay-100 group-hover:visible w-full justify-between items-center text-2xl bg-linear-to-t from-black/90 to-black/0 text-white",
                   !isPlaying && "visible"
                 )}
                 onClick={(e) => e.stopPropagation()}
@@ -282,7 +282,9 @@ const VideoPlayerComponent = ({
                         name="progress"
                         id="progress"
                         min="0"
-                        max={Math.round(duration)}
+                        max={Math.round(
+                          loadedDuration ? loadedDuration : duration
+                        )}
                         value={currentTime}
                         onChange={(e) => handleSeek(Number(e.target.value))}
                       />
@@ -314,7 +316,7 @@ const VideoPlayerComponent = ({
                         </button>
                       )}
                     </div>
-                    {duration && (
+                    {(loadedDuration || duration) && (
                       <div className="text-lg p-1 cursor-default">
                         {secMinHrConvert(currentTime)} /{" "}
                         {secMinHrConvert(
@@ -346,7 +348,7 @@ const VideoPlayerComponent = ({
                         </div>
                         <div
                           className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
-                          onClick={hasAudio ? hanleMute : () => ""}
+                          onClick={handleMute}
                         >
                           {volume === 0 ||
                           videoRef.current?.volume == undefined ||

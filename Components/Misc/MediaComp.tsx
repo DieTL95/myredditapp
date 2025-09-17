@@ -168,8 +168,11 @@ const MediaComponent = ({ post }: { post: PostData }) => {
                       : "object-cover"
                   )}
                 />
-                {(post.post_hint.includes("video") ||
-                  post.preview.images[0].variants.gif) && (
+                {(post.post_hint?.includes("video") ||
+                  post.preview.images[0].variants.gif ||
+                  post.crosspost_parent_list?.[0]?.post_hint?.includes(
+                    "video"
+                  )) && (
                   <div className="absolute flex justify-center  items-center  top-[45%] right-[45%] my-auto w-16 h-16 mx-auto z-100">
                     <PlayIconComponent />
                   </div>

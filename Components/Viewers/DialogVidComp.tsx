@@ -19,12 +19,14 @@ const DialogVideoComponent = (portalNode: {
         />
       )}
       <div
-        className="xbutton absolute top-0 right-0 text-3xl h-10 w-10 z-100 rounded-full text-white hover:bg-black/40 hover:scale-110"
+        className="xbutton absolute top-0 right-0 text-3xl h-10 z-100 rounded-full text-white hover:bg-black/40 hover:scale-110"
         onClick={() => {
           document.querySelector("dialog")?.close();
         }}
       >
-        <IoMdClose className="h-10 w-10" />
+        <div>
+          <IoMdClose className="h-10 w-10" />
+        </div>
       </div>
       <div
         className="backdrop absolute  top-0 bottom-0 right-0 left-0 h-full w-full z-60"

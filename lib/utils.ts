@@ -117,17 +117,51 @@ export const redditScopes = [
   "flair",
 ];
 
-export const usePosts = (
-  value: string,
-  sort: string,
-  redditType: string,
-  page?: string
-) => {
+export const usePosts = ({
+  value,
+  sort,
+  redditType,
+  subreddit,
+  restrict,
+  page,
+}: {
+  value: string;
+  sort: string;
+  redditType: string;
+  subreddit?: string;
+  restrict?: string;
+  page?: string;
+}) => {
+  console.log(
+    value,
+    sort,
+    redditType,
+    "subreddit: ",
+    subreddit,
+    restrict,
+    page
+  );
   return useInfiniteQuery({
-    queryKey: ["redditData", value, sort, page, redditType],
+    queryKey: [
+      "redditData",
+      value,
+      sort,
+      redditType,
+      subreddit,
+      restrict,
+      page,
+    ],
 
     queryFn: async ({ pageParam }) =>
-      fetchPostsAction({ value, sort, redditType, page, pageParam }),
+      fetchPostsAction({
+        value,
+        sort,
+        redditType,
+        restrict,
+        subreddit,
+        page,
+        pageParam,
+      }),
     retry: 2,
     refetchOnWindowFocus: false,
     refetchOnMount: false,

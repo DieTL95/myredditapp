@@ -1,13 +1,10 @@
-import { BsThreeDots } from "react-icons/bs";
-
-import VotesComponent from "./VotesComp";
-import { TfiCommentAlt } from "react-icons/tfi";
 import LongSelfComponent from "../Misc/LongSelf";
 import YoutubeComponent from "../Viewers/YoutubeComp";
 import type { Post } from "@/lib/types";
 import PostCardDetailsComponent from "./PostCardDetails";
 import UserIconComponent from "../Misc/UserIconComp";
 import MediaComponent from "../Misc/MediaComp";
+import ActionsComponent from "./ActionsComp";
 
 const PostCardComp = ({
   post,
@@ -50,17 +47,7 @@ const PostCardComp = ({
             <MediaComponent post={post.data} />
           )}
         </div>
-        <div className="flex flex-row  text-lg items-center px-1 pt-2 justify-between ">
-          <span className="flex-row items-center flex gap-2 basis-1/3">
-            <TfiCommentAlt /> {post.data.num_comments}
-          </span>
-          <div className="basis-1/3">
-            <VotesComponent post={post.data} />
-          </div>
-          <div className="basis-1/3 flex justify-end">
-            <BsThreeDots />
-          </div>
-        </div>
+        <ActionsComponent post={post.data} />
       </div>
     </div>
   );

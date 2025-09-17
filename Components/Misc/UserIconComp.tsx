@@ -28,7 +28,6 @@ const UserIconComponent = ({
     if (reply && !userIcon) {
       const observer = new IntersectionObserver(
         (enteries) => {
-          console.log("reply");
           enteries.forEach(async (entry) => {
             if (entry.isIntersecting) {
               const user = await fetchUserInfo(reply.author);

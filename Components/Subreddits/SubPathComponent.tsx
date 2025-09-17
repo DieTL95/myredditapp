@@ -22,7 +22,7 @@ const SubPathComponent = ({
     isPending,
     isFetching,
     isLoading,
-  } = usePosts(subreddit, sort || "hot", redditType);
+  } = usePosts({ value: subreddit, sort: sort || "hot", redditType });
 
   useEffect(() => {
     const div = document.getElementById("loadMoreDiv");

@@ -162,7 +162,6 @@ export const subSearchAcion = async (query: string) => {
 
     if (res.ok) {
       const data = await res.json();
-      console.log(data);
       return data as SubSearchType;
     }
   } catch (error) {
@@ -198,26 +197,38 @@ export const fetchFrontPage = async ({ pageParam }: { pageParam: string }) => {
 export const fetchPostsAction = async ({
   value,
   sort,
-  pageParam,
   redditType,
+  subreddit,
+  restrict,
   page,
+  pageParam,
 }: {
   value: string;
   sort?: string | undefined;
-  pageParam: string | undefined;
   redditType: string | undefined;
+  subreddit?: string;
+  restrict?: string;
   page: string | undefined;
+  pageParam: string | undefined;
 }) => {
   const accessToken = await getRedditToken();
 
   if (value == undefined) {
     throw new Error("Failed.");
   }
-  console.log("Server Values:", value, sort, pageParam, redditType);
+  console.log(
+    "Server Values:",
+    value,
+    sort,
+    subreddit,
+    restrict,
+    redditType,
+    pageParam
+  );
   try {
     const res = await fetch(
       redditType === "search"
-        ? `https://oauth.reddit.com/search?q=${value}&include_over_18=on&raw_json=1&sr_detail=true&t=all&sort=${sort}&after=${pageParam}`
+        ? `https://oauth.reddit.com${subreddit ? `/r/${subreddit}` : ""}/search?q=${value}${restrict ? `&restrict_sr=${restrict}` : ""}&include_over_18=on&raw_json=1&sr_detail=true&t=all&sort=${sort}&after=${pageParam}`
         : redditType === "subreddits"
           ? `https://oauth.reddit.com/search_subreddits?query=${value}`
           : redditType === "subreddit"
@@ -259,7 +270,6 @@ export const fetchCommentsAction = async (id: string) => {
         },
       }
     );
-
     if (res.ok) {
       const data = await res.json();
 
@@ -271,23 +281,78 @@ export const fetchCommentsAction = async (id: string) => {
   }
 };
 
-export const submitAction = async ({
+export const getSubRules = async (subreddit: string) => {
+  const accessToken = await getRedditToken();
+
+  const ass = await fetch(
+    `https://oauth.reddit.com/r/${subreddit}/about/rules`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${accessToken}`,
+      },
+    }
+  );
+
+  console.log(ass);
+
+  if (ass.ok) {
+    const res = await ass.json();
+    return res;
+  }
+};
+
+export const commentSubmitAction = async (
+  text: string,
+
+  thing_id: string
+) => {
+  const accessToken = await getRedditToken();
+
+  if (!accessToken) {
+    redirect("/signin");
+  }
+
+  try {
+    const res = await fetch(`https://oauth.reddit.com/api/comment`, {
+      method: "POST",
+      body: `text=${text}&thing_id=${thing_id}`,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        authorization: `bearer ${accessToken}`,
+      },
+    });
+    console.log(res);
+
+    if (res.ok) {
+      const { jquery } = await res.json();
+      console.log(jquery);
+      console.log(jquery[18][3][0]);
+      return jquery;
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error(`Error: ${error}`);
+  }
+};
+
+export const postSubmitAction = async ({
   title,
   text,
-
   subreddit,
   kind,
-  modhash,
 }: SubmittionType) => {
   const accessToken = await getRedditToken();
 
   if (!accessToken) {
     redirect("/signin");
   }
+
   try {
     const res = await fetch(`https://oauth.reddit.com/api/submit/`, {
       method: "POST",
-      body: `title=${title}&text=${text}&sr=${subreddit}&kind=${kind}&modhash=${modhash}`,
+      body: `title=${title}&text=${text}&sr=${subreddit}&kind=${kind}`,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
         authorization: `bearer ${accessToken}`,
@@ -298,6 +363,7 @@ export const submitAction = async ({
       const { jquery } = await res.json();
 
       console.log(jquery);
+      return jquery;
     }
   } catch (error) {
     console.log(error);
@@ -429,6 +495,38 @@ export const deleteAction = async (id: string, modhash: string) => {
         },
       }
     );
+
+    if (res.ok) {
+      return {
+        error: false,
+        message: "Successfly deleted.",
+      };
+    }
+  } catch (error) {
+    throw new Error(`Error: ${error}`);
+  }
+};
+
+export const uploadImageAction = async (
+  filepath: string,
+  mime: string,
+  subreddit: string
+) => {
+  const accessToken = await getRedditToken();
+
+  if (!accessToken) {
+    redirect("/signin");
+  }
+
+  try {
+    const res = await fetch(`https://oauth.reddit.com/api/media/asset`, {
+      method: "POST",
+      body: `filepath=${filepath}&minetype=${mime}&sr=${subreddit}`,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        authorization: `bearer ${accessToken}`,
+      },
+    });
 
     if (res.ok) {
       return {

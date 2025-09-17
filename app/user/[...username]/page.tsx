@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import UserAndSubSkeleton from "@/Components/LoadingSkeletons/UserSubSkeleton";
 import UserLinksComponent from "@/Components/User/UserLinksComp";
+import SubmittionPage from "@/app/submit/page";
 
 type Params = Promise<{ username: string[] }>;
 
@@ -30,7 +31,9 @@ const UserPage = async (props: { params: Params }) => {
     return;
   }
 
-  return (
+  return username[1] === "submit" ? (
+    <SubmittionPage page={username[0]} />
+  ) : (
     <Suspense fallback={<UserAndSubSkeleton />}>
       <div className="flex flex-col  ">
         {!userInfo.is_suspended ? (

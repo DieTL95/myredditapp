@@ -124,9 +124,17 @@ height: 100%;
 height: 100%;
 }
 
-.dialog:has(.zoomed) .xbutton {
+.dialog:has(.zoomed) .xbutton  {
 position: sticky;
 left: 100%;}
+
+.dialog:has(.zoomed) .xbutton > div  {
+position: absolute;
+top: 0;
+right: 0;
+}
+
+
 .gal-prev::before {
 content: "";
   width: 50%;
@@ -222,6 +230,11 @@ background-color: color-mix(in oklab, var(--color-gray-400) /* oklch(70.7% 0.022
   border: none;
   height: 12px;
   width: 12px;
+}
+  
+  .controls .volume:hover input[type="range"]::-moz-range-thumb,  .controls .progress:hover input[type="range"]::-moz-range-thumb{
+  height: 14px;
+  width: 14px;
 }
   
 

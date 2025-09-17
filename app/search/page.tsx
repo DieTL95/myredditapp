@@ -2,16 +2,20 @@ import PostsSkeleton from "@/Components/LoadingSkeletons/PostsSkeleton";
 import SearchResultsComponent from "@/Components/Search/SearchResultsComp";
 import { Suspense } from "react";
 
-type Params = Promise<{ slug: string }>;
+type Params = Promise<{ sub: string[]; slug: string }>;
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
-const searchPage = async (props: {
+const SearchPage = async (props: {
   params: Params;
   searchParams: SearchParams;
 }) => {
+  console.log(await props.params);
+  const subname = (await props.params).slug;
+
   const searchParams = await props.searchParams;
   const query = searchParams.q;
   const sort = searchParams.sort;
+  const restrict_sr = searchParams.restrict_sr;
 
   return (
     // <div className="w-[500px] h-[700px] relative border-2">
@@ -38,9 +42,14 @@ const searchPage = async (props: {
     //   </div>
     // </div>
     <Suspense fallback={<PostsSkeleton />}>
-      <SearchResultsComponent query={query as string} sort={sort as string} />
+      <SearchResultsComponent
+        query={query as string}
+        sort={sort as string}
+        subreddit={subname}
+        restrict={restrict_sr as string}
+      />
     </Suspense>
   );
 };
 
-export default searchPage;
+export default SearchPage;

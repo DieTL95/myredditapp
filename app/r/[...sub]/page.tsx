@@ -7,11 +7,14 @@ import { Suspense } from "react";
 import UserAndSubSkeleton from "@/Components/LoadingSkeletons/UserSubSkeleton";
 import SubLinksComp from "@/Components/Subreddits/SubLinksComp";
 import SidebarComponent from "@/Components/Misc/SidebarComp";
+import SearchPage from "@/app/search/page";
+import SubmittionPage from "@/app/submit/page";
 
-type Params = Promise<{ sub: string[] }>;
+type Params = Promise<{ sub: string[]; slug: string }>;
 type Props = {
   params: Promise<{ sub: string[] }>;
 };
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 type Post = {
   data: {
@@ -47,16 +50,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: "Reddit App", referrer: "no-referrer" };
 }
 
-const SubredditPage = async (props: { params: Params }) => {
+const SubredditPage = async (props: {
+  params: Params;
+  searchParams: SearchParams;
+}) => {
   const params = await props.params;
   const sub = params.sub;
   const subInfo = await fetchSubredditInfo(sub[0]);
-  if (!subInfo && sub[0] !== "friends") {
-    return;
-  }
 
   return sub[1] === "comments" ? (
     <CommentsComponent params={[...sub]} />
+  ) : sub[1] === "search" ? (
+    <SearchPage params={props.params} searchParams={props.searchParams} />
+  ) : sub[1] === "submit" ? (
+    <SubmittionPage page={sub[0]} />
   ) : (
     <Suspense fallback={<UserAndSubSkeleton />}>
       <div className="flex flex-row">

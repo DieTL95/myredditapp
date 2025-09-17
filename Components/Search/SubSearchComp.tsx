@@ -9,17 +9,22 @@ import { useDebouncedCallback } from "use-debounce";
 import Link from "next/link";
 import type { SubSearchType } from "@/lib/types";
 import { subSearchAcion } from "@/lib/action";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const SubSearchComponent = () => {
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [data, setData] = useState<SubSearchType>();
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const [value, setValue] = useState<string | undefined>();
   const [sort, setSort] = useState("relevance");
+  const [scope, setScope] = useState<string>();
   const router = useRouter();
-  console.log(searchParams.get("q"));
+  const subname = pathname.split("/")[2] || undefined;
+  console.log(subname);
+
+  console.log(scope);
+
   // const debounce = useDebouncedCallback(
   //   (e: React.KeyboardEvent<HTMLInputElement>) => {
   //     if (e.currentTarget.value !== "") {
@@ -111,14 +116,33 @@ const SubSearchComponent = () => {
               onChange={(e) => debounced(e.target.value)}
               onKeyUp={(e) => {
                 if (e.code === "Enter") {
-                  router.push(
-                    `/search?q=${e.currentTarget.value}&sort=${sort}`
-                  );
-                  setSearchOpen(false);
+                  if (value !== undefined) {
+                    router.push(
+                      `${subname ? `/r/${subname}` : ""}/search?q=${value}&sort=${sort}${scope ? `&restrict_sr=${scope}` : ""}`
+                    );
+                    setSearchOpen(false);
+                  }
                 }
               }}
             />
-            <div className={cn("hidden", searchOpen !== false && "inline")}>
+            {subname && (
+              <div
+                className={cn("hidden pr-2 ", searchOpen !== false && "flex ")}
+              >
+                <label className="w-max pr-2" htmlFor="checkbox">
+                  In Sub?
+                </label>
+                <input
+                  type="checkbox"
+                  name="checkbox"
+                  className="items-center  bg-pink-900 border-pink-950"
+                  onChange={(e) => setScope(e.target.checked ? "on" : "off")}
+                />
+              </div>
+            )}
+            <div
+              className={cn("hidden my-auto", searchOpen !== false && "inline")}
+            >
               <select
                 className="items-center flex flex-col bg-pink-900 border-pink-950"
                 onChange={(e) => setSort(e.target.value)}
@@ -168,7 +192,7 @@ const SubSearchComponent = () => {
             <Link
               id="searchResult"
               className="w-full"
-              href={`/search?q=${value}&sort=${sort}`}
+              href={`${subname && `/r/${subname}`}/search?q=${value}&sort=${sort}${scope ? `&restrict_sr=${scope}` : ""}`}
             >
               {value}
             </Link>

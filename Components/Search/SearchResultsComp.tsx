@@ -8,10 +8,15 @@ import PostsSkeleton from "../LoadingSkeletons/PostsSkeleton";
 const SearchResultsComponent = ({
   query,
   sort,
+  subreddit,
+  restrict,
 }: {
   query: string;
   sort: string;
+  subreddit?: string;
+  restrict?: string;
 }) => {
+  console.log("QUERY: ", query);
   const redditType = "search";
   const {
     data,
@@ -21,7 +26,7 @@ const SearchResultsComponent = ({
     isPending,
     isFetching,
     isLoading,
-  } = usePosts(query, sort, redditType);
+  } = usePosts({ value: query, sort, redditType, subreddit, restrict });
   return isPending ? (
     <PostsSkeleton />
   ) : (

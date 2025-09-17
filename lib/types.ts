@@ -32,7 +32,7 @@ export type PostData = {
   num_crossposts: number;
   over_18: boolean;
   permalink: string;
-  post_hint: string;
+  post_hint?: string;
   poll_data: {
     prediction_status: null;
     tournament_id: null;
@@ -201,6 +201,7 @@ export type RedditQueries = {
 };
 
 export type SubCardType = {
+  reason?: string;
   kind: string;
 
   data: {
@@ -506,13 +507,55 @@ export type Subreddit = {
 };
 
 export type SubmittionType = {
-  title: string;
+  title?: string;
   url?: string;
   text?: string;
+  thing_id?: string;
   richtext_json?: JSON;
   nsfw?: boolean;
   subreddit: string;
   parent?: string;
-  modhash: string;
-  kind: "link" | "self" | "image" | "video" | "videogif";
+  modhash?: string;
+  kind?: "link" | "self" | "image" | "video" | "videogif";
+};
+
+export type SubredditRules = {
+  rules: {
+    kind: string;
+    description: string;
+    short_name: string;
+    violation_reason: string;
+    created_utc: number;
+    priority: number;
+    description_html?: string;
+  }[];
+
+  site_rules: string[];
+
+  site_rules_flow: {
+    reasonTextToShow: string;
+    reasonText: string;
+    nextStepHeader?: string;
+    nextStepReasons?: {
+      nextStepHeader?: string;
+      reasonTextToShow: string;
+      nextStepReasons?: {
+        reasonTextToShow: string;
+        reasonText: string;
+      }[];
+      reasonText: string;
+      canWriteNotes?: boolean;
+      isAbuseOfReportButton?: boolean;
+      notesInputTitle?: string;
+      complaintButtonText?: string;
+      complaintUrl?: string;
+      complaintPageTitle?: string;
+      fileComplaint?: boolean;
+      complaintPrompt?: string;
+      usernamesInputTitle?: string;
+      canSpecifyUsernames?: boolean;
+      requestCrisisSupport?: boolean;
+      oneUsername?: boolean;
+    }[];
+  }[];
 };

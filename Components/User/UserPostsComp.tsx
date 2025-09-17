@@ -24,7 +24,7 @@ const UserPostsComponent = ({
     isPending,
     isFetching,
     isLoading,
-  } = usePosts(username, sort, redditType, page || "overview");
+  } = usePosts({ value: username, sort, redditType, page: page || "overview" });
   if (!data && !isPending) {
     return <div>User doesn&apos;t exist.</div>;
   }
