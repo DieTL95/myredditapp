@@ -34,7 +34,8 @@ border-color: rgb(47, 51, 54);
 --color-twitter-gray: rgb(47, 51, 54);
 --color-secondary-text: rgb(113, 118, 123);
 --color-black-hover: rgb(255, 255, 255, 0.03);
---animate-slow-spin: spin 1.5s linear infinite
+--animate-slow-spin: spin 1.5s linear infinite;
+--shadow-box-shadow-white: rgba(255, 255, 255, 0.2) 0px 0px 15px, rgba(255, 255, 255, 0.15) 0px 0px 3px 1px
 }
 
 @media (prefers-color-scheme: dark) {
@@ -89,6 +90,9 @@ text-decoration: underline;
   color: rgb(153, 1, 128)
 }
 
+code {
+  display: block;
+overflow-x: scroll;}
 
 .dialog[open] video {
 max-height: 100vh;

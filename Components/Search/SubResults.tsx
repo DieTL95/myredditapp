@@ -13,19 +13,12 @@ const SubResultsComponents = ({
         <div
           key={index}
           className="w-full even:bg-pink-800 odd:bg-pink-900 hover:border-2 border-pink-950 z-10"
-          id="searchResult"
         >
           <div className="flex flex-col w-full  -z-1 ">
             <Link href={`/r/${sub.name}`} id="searchResult">
-              <div
-                className="flex flex-row bg-[image:var(--image-url)] bg-contain h-[82px]"
-                id="searchResult"
-              >
+              <div className="flex flex-row bg-[image:var(--image-url)] bg-contain h-[82px]">
                 <div className="flex flex-col gap-2" id="searchResult">
-                  <div
-                    className="flex items-center justify-center"
-                    id="searchResult"
-                  >
+                  <div className="flex items-center justify-center">
                     <div className="p-4">
                       {sub.icon_img ? (
                         <Image
@@ -33,14 +26,10 @@ const SubResultsComponents = ({
                           width={50}
                           height={50}
                           className="rounded-full"
-                          id="searchResult"
                           alt="User Icon"
                         />
                       ) : (
-                        <div
-                          className="h-[50px] w-[50px]"
-                          id="searchResult"
-                        ></div>
+                        <div className="h-[50px] w-[50px]"></div>
                       )}
                     </div>
                   </div>

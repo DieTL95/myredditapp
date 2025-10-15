@@ -1,7 +1,6 @@
 import type { GalleryMetadata } from "@/lib/types";
-
+import { ArrowRight, ArrowLeft } from "lucide-react";
 import Image from "next/image";
-import { FaArrowCircleRight, FaArrowCircleLeft } from "react-icons/fa";
 
 const InlineGalleryComponent = ({
   media,
@@ -34,24 +33,26 @@ const InlineGalleryComponent = ({
     <div className="flex flex-col h-full ">
       <div className="h-full">
         <>
-          <div className=" absolute top-[50%] h-10 right-0 z-50 hover:scale-110">
+          <div className=" absolute top-[50%]  right-0 z-50 ">
             <button
+              className="hover:scale-110 rounded-full p-1 hover:bg-white/30"
               onClick={(e) => {
                 e.stopPropagation();
                 nextImage();
               }}
             >
-              <FaArrowCircleRight className="text-2xl text-white" />
+              <ArrowRight size={20} />
             </button>
           </div>
-          <div className=" absolute top-[50%] h-10 left-0 z-50 hover:scale-110">
+          <div className=" absolute top-[50%] h-10 left-0 z-50">
             <button
+              className="hover:scale-110 rounded-full p-1 hover:bg-white/30"
               onClick={(e) => {
                 e.stopPropagation();
                 prevImage();
               }}
             >
-              <FaArrowCircleLeft className="text-2xl text-white" />
+              <ArrowLeft size={20} />
             </button>
           </div>
         </>
@@ -73,7 +74,7 @@ const InlineGalleryComponent = ({
               unoptimized
               width={1000}
               height={1000}
-              style={{ height: "100%", maxHeight: "60vh", width: "40vw" }}
+              style={{ height: "672px", maxHeight: "60vh", width: "40vw" }}
               className="object-contain relative mx-auto max-h-fit"
               alt={currentImg.toString()}
             />

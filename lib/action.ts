@@ -9,6 +9,7 @@ import type {
   SubSearchType,
   UserInfo,
   Gfy,
+  UserSubType,
 } from "./types";
 import { auth } from "@/utils/auth";
 import db from "@/utils/prisma";
@@ -94,12 +95,12 @@ export const fetchMeAction = async () => {
   }
 };
 
-export const fetchUserInfo = async (userName: string) => {
+export const fetchUserInfo = async (username: string) => {
   const accessToken = await getRedditToken();
 
   try {
     const res = await fetch(
-      `https://oauth.reddit.com/user/${userName}/about?raw_json=1`,
+      `https://oauth.reddit.com/user/${username}/about?raw_json=1`,
       {
         method: "GET",
         headers: {
@@ -123,25 +124,25 @@ export const fetchUserInfo = async (userName: string) => {
 export const fetchSubredditInfo = async (subreddit: string) => {
   const accessToken = await getRedditToken();
 
-  try {
-    const res = await fetch(
-      `https://oauth.reddit.com/r/${subreddit}/about?raw_json=1`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `bearer ${accessToken}`,
-        },
-      }
-    );
-
-    if (res.ok) {
-      const data = await res.json();
-
-      return data as SubCardType;
+  const res = await fetch(
+    `https://oauth.reddit.com/r/${subreddit}/about?raw_json=1`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${accessToken}`,
+      },
     }
-  } catch (error) {
-    throw new Error(`Error: ${error}`);
+  );
+
+  if (res.ok) {
+    const data = await res.json();
+
+    return data as SubCardType;
+  }
+  if (!res.ok) {
+    const data = await res.json();
+    return data as SubCardType;
   }
 };
 
@@ -163,6 +164,30 @@ export const subSearchAcion = async (query: string) => {
     if (res.ok) {
       const data = await res.json();
       return data as SubSearchType;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getUserSubs = async (pageParam: string) => {
+  const accessToken = await getRedditToken();
+
+  try {
+    const res = await fetch(
+      `https://oauth.reddit.com/subreddits/mine/subscriber?raw_json=1&after=${pageParam}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `bearer ${accessToken}`,
+        },
+      }
+    );
+
+    if (res.ok) {
+      const data: UserSubType = await res.json();
+      return data.data;
     }
   } catch (error) {
     console.log(error);
@@ -256,12 +281,16 @@ export const fetchPostsAction = async ({
   }
 };
 
-export const fetchCommentsAction = async (id: string) => {
+export const fetchCommentsAction = async (
+  id: string,
+  comment?: string,
+  context?: number
+) => {
   const accessToken = await getRedditToken();
 
   try {
     const res = await fetch(
-      `https://oauth.reddit.com/comments/${id}?raw_json=1`,
+      `https://oauth.reddit.com/comments/${id}?${comment ? `comment=${comment}&context=${context}&` : ""}raw_json=1`,
       {
         method: "GET",
         headers: {
@@ -323,13 +352,12 @@ export const commentSubmitAction = async (
         authorization: `bearer ${accessToken}`,
       },
     });
-    console.log(res);
 
     if (res.ok) {
       const { jquery } = await res.json();
       console.log(jquery);
       console.log(jquery[18][3][0]);
-      return jquery;
+      return jquery[18][3][0];
     }
   } catch (error) {
     console.log(error);
@@ -476,7 +504,7 @@ export const subscribeAction = async (subreddit: string, state: boolean) => {
   }
 };
 
-export const deleteAction = async (id: string, modhash: string) => {
+export const deleteAction = async (id: string) => {
   const accessToken = await getRedditToken();
 
   if (!accessToken) {
@@ -484,17 +512,14 @@ export const deleteAction = async (id: string, modhash: string) => {
   }
 
   try {
-    const res = await fetch(
-      `https://oauth.reddit.com/api/del?id=${id}&uh=${modhash}`,
-      {
-        method: "POST",
+    const res = await fetch(`https://oauth.reddit.com/api/del?id=${id}`, {
+      method: "POST",
 
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `bearer ${accessToken}`,
-        },
-      }
-    );
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${accessToken}`,
+      },
+    });
 
     if (res.ok) {
       return {
@@ -504,6 +529,89 @@ export const deleteAction = async (id: string, modhash: string) => {
     }
   } catch (error) {
     throw new Error(`Error: ${error}`);
+  }
+};
+
+export const blockUserAction = async (account: string, name: string) => {
+  const accessToken = await getRedditToken();
+
+  if (!accessToken) {
+    redirect("/signin");
+  }
+
+  try {
+    const res = await fetch(`https://oauth.reddit.com/api/block_user`, {
+      method: "POST",
+      body: `account_id=${account}&api_type=json&name=${name}`,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        authorization: `bearer ${accessToken}`,
+      },
+    });
+
+    console.log(res);
+
+    if (res.ok) {
+      return {
+        error: false,
+        message: `${name} blocked.`,
+      };
+    }
+  } catch (error) {
+    return {
+      error: true,
+      message: `Blocking failed. Error: ${error}`,
+    };
+  }
+};
+
+export const unblockUserAction = async (account: string) => {
+  const accessToken = await getRedditToken();
+
+  if (!accessToken) {
+    redirect("/signin");
+  }
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const user = await db.user.findUnique({
+    where: {
+      id: session?.user.id,
+    },
+    select: {
+      accounts: {
+        select: {
+          accountId: true,
+        },
+      },
+    },
+  });
+
+  try {
+    const res = await fetch(`https://oauth.reddit.com/api/unfriend`, {
+      method: "POST",
+      body: `id=t2_${account}&executed=removed&container=t2_${user?.accounts[0].accountId}&type=enemy`,
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        authorization: `bearer ${accessToken}`,
+      },
+    });
+
+    console.log(res);
+
+    if (res.ok) {
+      return {
+        error: false,
+        message: `user unblocked.`,
+      };
+    }
+  } catch (error) {
+    return {
+      error: true,
+      message: `Blocking failed. Error: ${error}`,
+    };
   }
 };
 

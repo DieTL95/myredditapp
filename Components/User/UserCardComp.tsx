@@ -1,7 +1,7 @@
 import type { UserInfo } from "@/lib/types";
 import Image from "next/image";
 import FriendButton from "./FriendButton";
-import { FaEnvelope } from "react-icons/fa";
+import { Mail } from "lucide-react";
 const UserCardComponent = ({ userInfo }: { userInfo: UserInfo }) => {
   console.log(userInfo);
   return (
@@ -40,7 +40,7 @@ const UserCardComponent = ({ userInfo }: { userInfo: UserInfo }) => {
         <div className="flex justify-end gap-2">
           {userInfo.accept_pms ? (
             <div className="h-9 w-9 border border-twitter-gray rounded-md hover:bg-gray-600 cursor-pointer">
-              <FaEnvelope className="w-full h-full p-2" />
+              <Mail size={20} className="w-full h-full p-2" />
             </div>
           ) : (
             ""

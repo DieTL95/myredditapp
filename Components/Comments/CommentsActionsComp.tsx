@@ -1,23 +1,22 @@
-import VotesComponent from "./VotesComp";
-import type { Comments, PostData } from "@/lib/types";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import { Toaster, toast } from "sonner";
+import VotesComponent from "./../Posts/VotesComp";
+import type { Comments } from "@/lib/types";
+import CommentSubmittionComponent from "../Submittions/CommentSubmittion";
 import DeletionComponent from "../Misc/DeleteComp";
-import BlockComponent from "../Buttons/BlockButton";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 import {
   Ellipsis,
   Link,
-  MessageSquareText,
+  MessageCircle,
   SquareArrowOutUpRight,
 } from "lucide-react";
 
-type Things = PostData | Comments;
-
-const ActionsComponent = ({ post }: { post: Things }) => {
+const CommentsActionsComponent = ({ reply }: { reply: Comments }) => {
   const [openMenu, setOpenMenu] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const hostDomain = "localhost:3000";
+  const [isClicked, setIsClicked] = useState(false);
 
   const elBounds = ref.current?.getBoundingClientRect();
   const winHeight = window.innerHeight;
@@ -32,7 +31,6 @@ const ActionsComponent = ({ post }: { post: Things }) => {
     const clipboardItem = new ClipboardItem(clipData);
     await navigator.clipboard.write([clipboardItem]).then(() => {
       toast("Copied to clipboard.");
-      setOpenMenu(false);
     });
   };
 
@@ -58,30 +56,23 @@ const ActionsComponent = ({ post }: { post: Things }) => {
 
   return (
     <>
-      <Toaster
-        position="bottom-center"
-        duration={1000}
-        theme="dark"
-        toastOptions={{
-          classNames: {
-            title: "!text-white ",
-            toast: "!bg-pink-900",
-          },
-          style: { width: "fit-content", marginInline: "auto" },
-        }}
-        className="flex justify-center"
-        style={{
-          animation: "none",
-          animationDuration: "0",
-        }}
-      />
-      <div className="flex flex-row  text-lg items-center px-1 pt-2 justify-between ">
-        <span className="flex-row items-center flex gap-2 basis-1/3">
-          <MessageSquareText size={20} />
-          {post.num_comments}
-        </span>
+      <div className="flex flex-row  text-lg items-center px-1 pt-2 justify-between">
+        <div className="basis-1/3 flex justify-start">
+          <span
+            className={cn(
+              "flex-row flex gap-2 items-center cursor-pointer",
+              !reply.send_replies && "cursor-default text-gray-400"
+            )}
+            onClick={() => {
+              if (reply.send_replies) setIsClicked((prev) => !prev);
+            }}
+          >
+            {reply.replies && reply.replies.data.children.length}{" "}
+            <MessageCircle size={20} />
+          </span>
+        </div>
         <div className="basis-1/3">
-          <VotesComponent post={post} />
+          <VotesComponent post={reply} />
         </div>
         <div className="basis-1/3 flex justify-end relative">
           <div
@@ -102,39 +93,48 @@ const ActionsComponent = ({ post }: { post: Things }) => {
                   className="flex flex-col justify-center divide-y divide-twitter-gray  w-full text-lg list-none"
                   id="actionMenu"
                 >
-                  <div
-                    className="flex items-center gap-2 py-3 px-4 cursor-pointer w-full  rounded-t-[16px] hover:bg-gray-800"
-                    onClick={() =>
-                      copytoClipboard(`${hostDomain}${post.permalink}`)
-                    }
-                  >
+                  <div className="flex items-center gap-2 py-3 px-4 cursor-pointer w-full border-b border-b-twitter-gray rounded-t-[16px] hover:bg-gray-800">
                     <Link size={20} />
-                    <span>Copy Post Link.</span>
+
+                    <span
+                      onClick={() =>
+                        copytoClipboard(`${hostDomain}${reply.permalink}`)
+                      }
+                    >
+                      Copy Post Link.
+                    </span>
                   </div>{" "}
-                  <div
-                    className="flex items-center w-full cursor-pointer gap-2 py-3 px-4 rounded-b-[16px] hover:bg-gray-800"
-                    onClick={() =>
-                      copytoClipboard(`https://reddit.com${post.permalink}`)
-                    }
-                  >
+                  <div className="flex items-center w-full cursor-pointer gap-2 py-3 px-4 border-b border-b-twitter-gray hover:bg-gray-800">
                     <SquareArrowOutUpRight size={20} />
-                    <span>Copy Reddit Link.</span>
+
+                    <span
+                      onClick={() =>
+                        copytoClipboard(`https://reddit.com${reply.permalink}`)
+                      }
+                    >
+                      Copy Reddit Link.
+                    </span>
                   </div>
-                  <DeletionComponent name={post.name} author={post.author} />
-                  {!post.author_is_blocked && (
-                    <BlockComponent
-                      account={post.author_fullname}
-                      name={post.author}
-                    />
-                  )}
+                  <DeletionComponent name={reply.name} author={reply.author} />
+                  <li>Hola</li>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
+      <div
+        className={cn(
+          "transition-[height]  ease-out h-0  max-h-fit",
+          isClicked && "h-fit mt-2"
+        )}
+      >
+        {isClicked && (
+          <CommentSubmittionComponent parentId={reply.name} parent="reply" />
+        )}
+      </div>
     </>
   );
 };
 
-export default ActionsComponent;
+export default CommentsActionsComponent;

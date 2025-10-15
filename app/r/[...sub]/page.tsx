@@ -26,6 +26,7 @@ type Post = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
   const { sub } = await params;
+
   const res = await fetchCommentsAction(sub[2]);
   if (!res) {
     return {
@@ -57,6 +58,12 @@ const SubredditPage = async (props: {
   const params = await props.params;
   const sub = params.sub;
   const subInfo = await fetchSubredditInfo(sub[0]);
+
+  if (subInfo?.error) {
+    return <div>Subreddit can`t be found. Reason: {subInfo?.reason}</div>;
+  }
+
+  console.log(sub);
 
   return sub[1] === "comments" ? (
     <CommentsComponent params={[...sub]} />

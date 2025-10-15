@@ -1,7 +1,7 @@
 import type { Gfy } from "@/lib/types";
 import VideoPlayerComponent from "./VideoPlayer";
-import { PiSpinner } from "react-icons/pi";
 import { cn } from "@/lib/utils";
+import { Loader } from "lucide-react";
 type Thumbnail = [
   {
     source: {
@@ -44,12 +44,7 @@ const RedgifsComponent = ({
           }
         ></div>
         <div className=" flex  w-full justify-center absolute top-[50%]  ">
-          <PiSpinner
-            className="animate-slow-spin text-black text-4xl"
-            height="2em"
-            width="2em"
-            speed="0.5"
-          />
+          <Loader size={32} className="animate-slow-spin text-white" />
         </div>
       </div>
     );

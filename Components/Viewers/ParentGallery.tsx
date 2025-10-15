@@ -15,6 +15,10 @@ const ParentGallery = ({
 }) => {
   const [currentImg, setCurrentImg] = useState(0);
 
+  const currentGalleryImgHandler = (index: number) => {
+    setCurrentImg(index);
+  };
+
   const inlineGalHandler = (postData: PostData) => {
     const mediaObject: GalleryMetadata[] = postData.crosspost_parent_list
       ? postData.crosspost_parent_list[0].media_metadata
@@ -57,6 +61,8 @@ const ParentGallery = ({
           <GalleryComponent
             media={media as GalleryMetadata[]}
             currentImg={currentImg}
+                      currentGalleryImgHandler={currentGalleryImgHandler}
+
             nextImage={() =>
               setCurrentImg(
                 currentImg === media.length - 1 ? 0 : currentImg + 1

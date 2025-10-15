@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { HiMiniMagnifyingGlassCircle } from "react-icons/hi2";
+import { Search } from "lucide-react";
 import SubResultsComponents from "./SubResults";
 import { cn } from "@/lib/utils";
 import { useDebouncedCallback } from "use-debounce";
@@ -20,7 +20,7 @@ const SubSearchComponent = () => {
   const [sort, setSort] = useState("relevance");
   const [scope, setScope] = useState<string>();
   const router = useRouter();
-  const subname = pathname.split("/")[2] || undefined;
+  const subname = pathname.split("/")[2] || "";
   console.log(subname);
 
   console.log(scope);
@@ -53,7 +53,8 @@ const SubSearchComponent = () => {
 
     if (
       searchRef.current &&
-      (!searchRef.current.contains(target) || target.id === "searchResult")
+      (!searchRef.current.contains(target) ||
+        searchRef.current.querySelector("#searchResult")?.contains(target))
     ) {
       setValue(undefined);
       setData(undefined);
@@ -77,15 +78,15 @@ const SubSearchComponent = () => {
     }
     if (e !== "") {
       setValue(e);
-      const res = await subSearchAcion(e);
-      if (res) {
-        setData(res);
-      }
     }
   };
+  const debounced = useDebouncedCallback(async (e) => {
+    const res = await subSearchAcion(e);
 
-  const debounced = useDebouncedCallback((e) => searchHandler(e), 1000);
-
+    if (res) {
+      setData(res);
+    }
+  }, 1000);
   console.log("Sub Search data: ", data);
 
   return (
@@ -113,7 +114,10 @@ const SubSearchComponent = () => {
               type="text"
               name="search"
               id="search"
-              onChange={(e) => debounced(e.target.value)}
+              onChange={(e) => {
+                searchHandler(e.target.value);
+                debounced(e.target.value);
+              }}
               onKeyUp={(e) => {
                 if (e.code === "Enter") {
                   if (value !== undefined) {
@@ -170,7 +174,7 @@ const SubSearchComponent = () => {
           </div>
 
           <button
-            className="searchButton text-5xl flex-none flex justify-center items-center bg-pink-900 rounded-[50%]"
+            className="searchButton p-1.5 w-12 h-12 flex-none flex justify-center items-center bg-pink-900 rounded-[50%]"
             onClick={(e) => {
               e.preventDefault();
 
@@ -181,16 +185,27 @@ const SubSearchComponent = () => {
               }
             }}
           >
-            <HiMiniMagnifyingGlassCircle />
+            <span className=" p-1 w-full h-full rounded-full flex-none flex justify-center items-center bg-red-200">
+              <Search
+                className=" text-pink-900"
+                height="100%"
+                width="100%"
+                strokeWidth={2.4}
+              />
+            </span>
           </button>
         </div>
       </div>
       {searchOpen && value !== undefined && (
-        <div className=" max-w-[40vw] top-14 rounded-b-3xl fixed mx-auto z-40 overflow-x-hidden overflow-y-scroll searchPopup ">
+        <div
+          className=" max-w-[40vw] top-14 rounded-b-3xl fixed mx-auto z-40 overflow-x-hidden overflow-y-scroll searchPopup "
+          id="searchResult"
+        >
           <div className="bg-pink-800  w-[40vw] flex flex-row cursor-pointer text-[1.250rem] items-center  gap-2 max-h-[100px] h-[50px]">
-            <HiMiniMagnifyingGlassCircle className="text-4xl" autoReverse />{" "}
+            <div className="p-2 m-2 rounded-full">
+              <Search height="100%" />{" "}
+            </div>
             <Link
-              id="searchResult"
               className="w-full"
               href={`${subname && `/r/${subname}`}/search?q=${value}&sort=${sort}${scope ? `&restrict_sr=${scope}` : ""}`}
             >

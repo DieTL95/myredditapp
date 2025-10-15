@@ -3,7 +3,6 @@ import { usePosts } from "@/lib/utils";
 import type { QueriesPages } from "@/lib/types";
 import LoaderComponent from "../Misc/LoaderComp";
 import FeedPostsComp from "../Posts/FeedPostsComp";
-import PostsSkeleton from "../LoadingSkeletons/PostsSkeleton";
 import { useEffect } from "react";
 const SubPathComponent = ({
   subreddit,
@@ -45,7 +44,7 @@ const SubPathComponent = ({
   }, [data, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return isPending ? (
-    <PostsSkeleton />
+    "Loading..."
   ) : (
     <>
       {data && !isLoading && (

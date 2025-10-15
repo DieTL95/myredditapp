@@ -7,6 +7,22 @@ export type QueriesPages = {
 
 export type PostData = {
   author: string;
+  author_flair_background_color?: string;
+  author_flair_css_class?: string;
+  author_flair_richtext?: {
+    a: string;
+    e: string;
+    u: string;
+    t: string;
+  }[];
+  author_flair_template_id?: string;
+  author_flair_text?: string;
+  author_flair_text_color?: string;
+  author_flair_type?: string;
+  author_fullname: string;
+  author_is_blocked: boolean;
+  author_patreon_flair: boolean;
+  author_premium: boolean;
   archived: boolean;
   clicked: boolean;
   created: number;
@@ -20,7 +36,18 @@ export type PostData = {
   is_gallery: boolean;
   id: string;
   likes: boolean | null;
-  link_flair_text: string;
+  link_flair_background_color?: string;
+  link_flair_css_class?: string;
+  link_flair_richtext?: {
+    a: string;
+    e: string;
+    u: string;
+    t: string;
+  }[];
+  link_flair_template_id?: string;
+  link_flair_text?: string;
+  link_flair_text_color?: string;
+  link_flair_type?: string;
   media_only: boolean;
   name: string;
   removal_reason: string;
@@ -54,6 +81,8 @@ export type PostData = {
   selftext_html: string;
   sr_detail?: Subreddit;
   subreddit: string;
+  subreddit_name_prefixed: string;
+  send_replies: boolean;
   stickied: boolean;
   title: string;
   url: string;
@@ -203,9 +232,10 @@ export type RedditQueries = {
 export type SubCardType = {
   reason?: string;
   kind: string;
+  error: number;
 
   data: {
-    user_flair_background_color: null;
+    user_flair_background_color?: string;
     submit_text_html: string;
     restrict_posting: boolean;
     user_is_banned: boolean;
@@ -214,10 +244,10 @@ export type SubCardType = {
     user_is_muted: boolean;
     user_can_flair_in_sr: boolean;
     display_name: string;
-    header_img: null;
+    header_img?: string;
     title: string;
     allow_galleries: boolean;
-    icon_size: null;
+    icon_size?: string;
     primary_color: string;
     icon_img: string;
     display_name_prefixed: string;
@@ -234,7 +264,7 @@ export type SubCardType = {
     comment_score_hide_mins: number;
     allow_predictions: boolean;
     user_has_favorited: boolean;
-    user_flair_template_id: null;
+    user_flair_template_id: string;
     community_icon: string;
     banner_background_image: string;
     original_content_tag_enabled: boolean;
@@ -244,11 +274,11 @@ export type SubCardType = {
     spoilers_enabled: boolean;
     comment_contribution_settings: { allowed_media_types: string[] };
     allow_talks: boolean;
-    header_size: null;
+    header_size: string;
     user_flair_position: string;
     all_original_content: boolean;
     has_menu_widget: boolean;
-    is_enrolled_in_new_modmail: null;
+    is_enrolled_in_new_modmail: boolean;
     key_color: string;
     can_assign_user_flair: boolean;
     created: number;
@@ -262,10 +292,10 @@ export type SubCardType = {
     user_flair_type: string;
     allow_polls: boolean;
     collapse_deleted_comments: boolean;
-    emojis_custom_size: null;
+    emojis_custom_size: number;
     public_description_html: string;
     allow_videos: boolean;
-    is_crosspostable_subreddit: null;
+    is_crosspostable_subreddit: boolean;
     notification_level: null;
     should_show_media_in_comments_setting: boolean;
     can_assign_link_flair: boolean;
@@ -361,9 +391,20 @@ export type GalleryMetadata = {
 export type Comments = {
   archived: boolean;
   author: string;
-  author_is_blocked: boolean;
-  author_flair_type: string;
+  author_flair_background_color?: string;
+  author_flair_css_class?: string;
+  author_flair_richtext?: {
+    a: string;
+    e: string;
+    u: string;
+    t: string;
+  }[];
+  author_flair_template_id?: string;
+  author_flair_text?: string;
+  author_flair_text_color?: string;
+  author_flair_type?: string;
   author_fullname: string;
+  author_is_blocked: boolean;
   author_patreon_flair: boolean;
   author_premium: boolean;
   banned_by: string;
@@ -391,6 +432,7 @@ export type Comments = {
   locked: boolean;
   name: string;
   no_follow: boolean;
+  num_comments?: number;
   parent_id: string;
   permalink: string;
   replies: Replies;
@@ -558,4 +600,119 @@ export type SubredditRules = {
       oneUsername?: boolean;
     }[];
   }[];
+};
+
+export type UserSubType = {
+  kind: string;
+  data: {
+    after: string;
+    dist: number;
+    modhash: string;
+
+    children: {
+      kind: string;
+      data: {
+        user_flair_background_color: string;
+        submit_text_html: string;
+        restrict_posting: boolean;
+        user_is_banned: boolean;
+        free_form_reports: boolean;
+        wiki_enabled: boolean;
+        user_is_muted: boolean;
+        user_can_flair_in_sr: boolean;
+        display_name: string;
+        header_img: string;
+        title: string;
+        original_content_tag_enabled: boolean;
+        allow_galleries: boolean;
+        icon_size: number;
+        primary_color: string;
+        icon_img: string;
+        display_name_prefixed: string;
+        public_traffic: boolean;
+        subscribers: number;
+        user_flair_richtext: string[];
+        name: string;
+        quarantine: boolean;
+        hide_ads: boolean;
+        prediction_leaderboard_entry_type: number;
+        emojis_enabled: boolean;
+        advertiser_category: string;
+        public_description: string;
+        comment_score_hide_mins: number;
+        allow_predictions: boolean;
+        user_has_favorited: boolean;
+        user_flair_template_id: string;
+        community_icon: string;
+        banner_background_image: string;
+        header_title: string;
+        community_reviewed: boolean;
+        submit_text: string;
+        description_html: string;
+        spoilers_enabled: boolean;
+        comment_contribution_settings: {
+          allowed_media_types: string;
+        };
+        allow_talks: boolean;
+        header_size: number[];
+        user_flair_position: string;
+        all_original_content: boolean;
+        has_menu_widget: boolean;
+        is_enrolled_in_new_modmail: boolean;
+        key_color: string;
+        can_assign_user_flair: boolean;
+        created: number;
+        wls: number;
+        show_media_preview: boolean;
+        submission_type: string;
+        user_is_subscriber: boolean;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        allowed_media_in_comments: any[];
+        allow_videogifs: boolean;
+        should_archive_posts: boolean;
+        user_flair_type: string;
+        allow_polls: boolean;
+        collapse_deleted_comments: boolean;
+        emojis_custom_size: number;
+        public_description_html: string;
+        allow_videos: boolean;
+        is_crosspostable_subreddit: boolean;
+        notification_level: string;
+        should_show_media_in_comments_setting: boolean;
+        can_assign_link_flair: boolean;
+        allow_prediction_contributors: boolean;
+        submit_text_label: string;
+        link_flair_position: string;
+        user_sr_flair_enabled: boolean;
+        user_flair_enabled_in_sr: boolean;
+        allow_discovery: boolean;
+        accept_followers: boolean;
+        user_sr_theme_enabled: boolean;
+        link_flair_enabled: boolean;
+        disable_contributor_requests: boolean;
+        subreddit_type: string;
+        suggested_comment_sort: string;
+        banner_img: string;
+        user_flair_text: string;
+        banner_background_color: string;
+        show_media: boolean;
+        id: string;
+        user_is_moderator: boolean;
+        over18: boolean;
+        description: string;
+        submit_link_label: string;
+        user_flair_text_color: string;
+        restrict_commenting: boolean;
+        user_flair_css_class: string;
+        allow_images: boolean;
+        lang: string;
+        url: string;
+        created_utc: number;
+        banner_size: number[];
+        mobile_banner_image: string;
+        user_is_contributor: boolean;
+        allow_predictions_tournament: boolean;
+      };
+    }[];
+  };
 };

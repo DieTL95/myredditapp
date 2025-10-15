@@ -30,8 +30,6 @@ const SubCardComponent = ({ sub }: { sub?: SubCardType }) => {
   if (!sub) {
     return;
   }
-  console.log(sub);
-  console.log(isLoading);
   return isLoading ? (
     <UserAndSubSkeleton />
   ) : (
@@ -58,7 +56,7 @@ const SubCardComponent = ({ sub }: { sub?: SubCardType }) => {
         )}
       </div>
       <div className="px-4">
-        <div className="h-[145px] max-w-[145px] -mt-[10%]">
+        <div className="h-[145px] z-30 max-w-[145px] -mt-[10%]">
           <div className=" ">
             {(sub.data.icon_img || sub.data.community_icon) && (
               <Image

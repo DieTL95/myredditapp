@@ -1,8 +1,8 @@
 import { voteAction } from "@/lib/action";
 import type { VotesPropType } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import { useState } from "react";
-import { IoArrowUp, IoArrowDown } from "react-icons/io5";
 
 const VotesComponent = ({ post }: { post: VotesPropType }) => {
   const [isVoting, setIsVoting] = useState<boolean>(false);
@@ -45,17 +45,12 @@ const VotesComponent = ({ post }: { post: VotesPropType }) => {
           disabled={isVoting}
           type="button"
           className={cn(
-            "hover:bg-gray-800 rounded-[50%] p-1 cursor-pointer",
+            "hover:bg-gray-800 rounded-full p-1 cursor-pointer",
             isVoting && "cursor-wait bg-grey-800"
           )}
           onClick={() => handleVote("upvote")}
         >
-          <IoArrowUp
-            className={cn(
-              "text-[1.250rem]",
-              voteState === true && "text-pink-500"
-            )}
-          />{" "}
+          <ArrowUp className={cn(voteState === true && "text-pink-500")} />{" "}
         </button>
       )}
       {post.score}{" "}
@@ -64,17 +59,12 @@ const VotesComponent = ({ post }: { post: VotesPropType }) => {
           type="button"
           disabled={isVoting}
           className={cn(
-            "hover:bg-gray-800 rounded-[50%] p-1 cursor-pointer",
+            "hover:bg-gray-800 rounded-full p-1 cursor-pointer",
             isVoting && "cursor-wait bg-grey-800"
           )}
           onClick={() => handleVote("downvote")}
         >
-          <IoArrowDown
-            className={cn(
-              "text-[1.250rem]",
-              voteState === false && "text-purple-500"
-            )}
-          />
+          <ArrowDown className={cn(voteState === false && "text-purple-500")} />
         </button>
       )}
     </div>

@@ -5,6 +5,7 @@ import {
   fetchPostsAction,
   fetchRedgifsAction,
   fetchUserInfo,
+  getUserSubs,
 } from "./action";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { betterFetch } from "@better-fetch/fetch";
@@ -185,6 +186,20 @@ export const useFrontPage = () => {
   });
 };
 
+export const useUserSubs = () => {
+  return useInfiniteQuery({
+    queryKey: ["redditData"],
+
+    queryFn: async ({ pageParam }) => getUserSubs(pageParam),
+    retry: 0,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    initialPageParam: "",
+    getNextPageParam: (data) => data?.after,
+  });
+};
+
 export const useUserInfo = (user: string) => {
   return useQuery({
     queryKey: ["userInfo"],
@@ -281,7 +296,6 @@ export const mediaHandler = async (post: PostData, domain: string) => {
       return post.url;
 
     case "reddit.com":
-      console.log("deiner Vatah");
       const mediaObject: GalleryMetadata[] = post.crosspost_parent_list
         ? post.crosspost_parent_list[0].media_metadata
         : post.media_metadata;
@@ -296,7 +310,6 @@ export const mediaHandler = async (post: PostData, domain: string) => {
       return moredata;
 
     case "v.redd.it":
-      console.log("deiner Arsch");
       if (post.crosspost_parent_list !== undefined) {
         return post.crosspost_parent_list[0].media.reddit_video;
       } else {

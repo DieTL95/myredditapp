@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import UserAndSubSkeleton from "@/Components/LoadingSkeletons/UserSubSkeleton";
 import UserLinksComponent from "@/Components/User/UserLinksComp";
 import SubmittionPage from "@/app/submit/page";
+import UnblockComponent from "@/Components/Buttons/UnblockButton";
 
 type Params = Promise<{ username: string[] }>;
 
@@ -39,14 +40,23 @@ const UserPage = async (props: { params: Params }) => {
         {!userInfo.is_suspended ? (
           <>
             <UserCardComponent userInfo={userInfo} />
-            <UserLinksComponent username={username} />
-            <div>
-              <UserPostsComponent
-                username={username[0]}
-                page={username[1]}
-                userIcon={userInfo?.icon_img}
-              />
-            </div>
+            {userInfo.is_blocked ? (
+              <div>
+                {username[0]} is blocked.{" "}
+                <UnblockComponent account={userInfo.id} />
+              </div>
+            ) : (
+              <>
+                <UserLinksComponent username={username} />
+                <div>
+                  <UserPostsComponent
+                    username={username[0]}
+                    page={username[1]}
+                    userIcon={userInfo?.icon_img}
+                  />
+                </div>
+              </>
+            )}
           </>
         ) : (
           <div className="text-center items-center justify-center w-full h-full">

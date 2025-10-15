@@ -7,16 +7,21 @@ import {
   useState,
   type CSSProperties,
 } from "react";
-import {
-  IoIosPause,
-  IoMdExpand,
-  IoMdPlay,
-  IoMdVolumeHigh,
-  IoMdVolumeOff,
-} from "react-icons/io";
 import DialogVideoComponent from "./DialogVidComp";
-import { PiSpinner } from "react-icons/pi";
-import { TbArrowsDiagonalMinimize2, TbArrowsDiagonal } from "react-icons/tb";
+
+import {
+  Expand,
+  Loader,
+  Maximize2,
+  Minimize2,
+  Pause,
+  Play,
+  Volume,
+  Volume1,
+  Volume2,
+  VolumeOff,
+  VolumeX,
+} from "lucide-react";
 
 const VideoPlayerComponent = ({
   url,
@@ -36,6 +41,7 @@ const VideoPlayerComponent = ({
   const [loadedDuration, setLoadedDuration] = useState<number>();
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [volume, setVolume] = useState<number>();
+  const [muted, setMuted] = useState<boolean>();
   const videoRef = useRef<HTMLVideoElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const [condition, setCondition] = useState<boolean>(false);
@@ -51,7 +57,7 @@ const VideoPlayerComponent = ({
   }, []);
 
   const handlePlay = () => {
-    if (isPlaying) {
+    if (!videoRef.current?.paused) {
       videoRef.current?.pause();
       setIsPlaying(false);
     } else {
@@ -67,15 +73,9 @@ const VideoPlayerComponent = ({
     }
 
     video.muted = !video.muted;
+    setMuted((prev) => !prev);
 
-    if (video.muted) {
-      localStorage.setItem("defaultVolume", JSON.stringify(0));
-    } else {
-      localStorage.setItem(
-        "defaultVolume",
-        JSON.stringify(volume === 0 && 100)
-      );
-    }
+    localStorage.setItem("muted", JSON.stringify(video.muted));
   };
 
   const handleVolume = (vol: number) => {
@@ -132,6 +132,31 @@ const VideoPlayerComponent = ({
     }
   };
 
+  document.querySelector("dialog")?.addEventListener("keyup", (e) => {
+    if (e.defaultPrevented) {
+      return;
+    }
+
+    if (e.key === " ") {
+      e.preventDefault();
+      handlePlay();
+      console.log("pase play");
+    }
+    if (videoRef.current) {
+      if (e.key === "ArrowLeft") {
+        e.preventDefault();
+
+        handleSeek(videoRef.current.currentTime - 10);
+      }
+
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+
+        handleSeek(videoRef.current.currentTime + 10);
+      }
+    }
+  });
+
   const handleZoom = () => {
     if (zoomed) {
       videoRef.current?.classList.remove("zoomed", "h-screen");
@@ -151,10 +176,15 @@ const VideoPlayerComponent = ({
       setLoadedDuration(videoRef.current?.duration);
     }
     const defaultVolume = localStorage.getItem("defaultVolume");
+    const mutedStorage = localStorage.getItem("muted");
     if (defaultVolume && video) {
       video.volume = JSON.parse(defaultVolume) / 100;
+      video.muted = mutedStorage && JSON.parse(mutedStorage);
 
       setVolume(JSON.parse(defaultVolume));
+      if (mutedStorage) {
+        setMuted(JSON.parse(mutedStorage));
+      }
     }
 
     const observer = new IntersectionObserver(
@@ -235,15 +265,10 @@ const VideoPlayerComponent = ({
       >
         {portalNode && (
           <portals.InPortal node={portalNode}>
-            <div className=" h-full w-full">
+            <div className=" h-full w-full ">
               {videoRef.current?.seeking && (
-                <div className=" flex  w-full justify-center absolute top-[50%]  ">
-                  <PiSpinner
-                    className="animate-slow-spin text-black text-4xl"
-                    height="2em"
-                    width="2em"
-                    speed="0.5"
-                  />
+                <div className=" left-[50%] absolute top-[50%]  ">
+                  <Loader size={32} className="animate-slow-spin text-white" />
                 </div>
               )}
               <video
@@ -301,7 +326,7 @@ const VideoPlayerComponent = ({
                           onClick={handlePlay}
                         >
                           <div>
-                            <IoIosPause />
+                            <Pause size={20} />
                           </div>
                         </button>
                       ) : (
@@ -311,7 +336,7 @@ const VideoPlayerComponent = ({
                           onClick={handlePlay}
                         >
                           <div className="">
-                            <IoMdPlay className="ml-[4px]" />
+                            <Play size={20} />
                           </div>
                         </button>
                       )}
@@ -350,17 +375,23 @@ const VideoPlayerComponent = ({
                           className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
                           onClick={handleMute}
                         >
-                          {volume === 0 ||
-                          videoRef.current?.volume == undefined ||
-                          videoRef.current.muted ? (
-                            <IoMdVolumeOff />
+                          {muted ? (
+                            <VolumeX size={20} />
+                          ) : volume && volume === 0 ? (
+                            <Volume size={20} />
+                          ) : volume && volume < 50 ? (
+                            <Volume1 size={20} />
+                          ) : volume && volume > 50 ? (
+                            <Volume2 size={20} />
+                          ) : videoRef.current?.volume == undefined ? (
+                            <VolumeOff size={20} />
                           ) : (
-                            <IoMdVolumeHigh />
+                            <Volume size={20} />
                           )}
                         </div>
                       </>
                     ) : (
-                      <IoMdVolumeOff />
+                      <VolumeOff size={20} />
                     )}
                     {condition && (
                       <div
@@ -368,9 +399,9 @@ const VideoPlayerComponent = ({
                         onClick={handleZoom}
                       >
                         {zoomed ? (
-                          <TbArrowsDiagonalMinimize2 />
+                          <Minimize2 size={20} />
                         ) : (
-                          <TbArrowsDiagonal />
+                          <Maximize2 size={20} />
                         )}
                       </div>
                     )}
@@ -378,7 +409,7 @@ const VideoPlayerComponent = ({
                       onClick={handleFullscreen}
                       className="size-8 cursor-pointer bg-none hover:bg-gray-400/40 flex justify-center items-center rounded-full"
                     >
-                      <IoMdExpand />
+                      <Expand size={20} />
                     </div>
                   </div>
                 </div>

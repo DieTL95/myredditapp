@@ -1,13 +1,11 @@
 import type { Comments } from "@/lib/types";
 import Link from "next/link";
-import VotesComponent from "../Posts/VotesComp";
-import { FaRegComment } from "react-icons/fa";
 import { cn, relativeTimeFromElapsed } from "@/lib/utils";
-import { TbPin } from "react-icons/tb";
-
 import UserIconComponent from "../Misc/UserIconComp";
-import { FiClock } from "react-icons/fi";
 import TextComponent from "../Misc/TextComp";
+import CommentsActionsComponent from "./CommentsActionsComp";
+import { Clock, Pin } from "lucide-react";
+import AuthorFlairComp from "../Misc/AuthorFlairComp";
 
 const RepliesComponent = ({
   reply,
@@ -55,7 +53,7 @@ const RepliesComponent = ({
                   reply.author === "[deleted]" ? "" : `/user/${reply.author}`
                 }
                 className={cn(
-                  " text-white  rounded-md hover:opacity-65",
+                  " text-white font-bold  rounded-md hover:opacity-65",
                   reply.is_submitter &&
                     "text-pink-400 font-bold after:content-['[S]']",
                   reply.distinguished === "moderator" &&
@@ -65,18 +63,19 @@ const RepliesComponent = ({
                 {" "}
                 u/<span>{reply.author}</span>{" "}
               </Link>
-
+              {(reply.author_flair_richtext?.[0] ||
+                reply.author_flair_text) && <AuthorFlairComp post={reply} />}
               <time
                 className="flex-row flex gap-1 items-center"
                 dateTime={new Date(reply.created * 1000).toLocaleString()}
                 title={new Date(reply.created * 1000).toLocaleString()}
               >
-                <FiClock />
+                <Clock strokeWidth={2} size={18} />
                 {relativeTimeFromElapsed(reply.created)}
               </time>
               {reply.stickied && (
                 <span className="flex-row flex gap-1 items-center">
-                  <TbPin />
+                  <Pin strokeWidth={2} size={18} />
                 </span>
               )}
             </div>
@@ -96,16 +95,7 @@ const RepliesComponent = ({
         </div>
         {reply.body_html && <TextComponent post={reply.body_html} />}
 
-        <div className="flex flex-row gap-0.5">
-          <span className="flex-row flex gap-2 items-center">
-            {reply.replies && reply.replies.data.children.length}{" "}
-            <FaRegComment />
-          </span>
-
-          <div>
-            <VotesComponent post={reply} />
-          </div>
-        </div>
+        <CommentsActionsComponent reply={reply} />
       </div>
     </div>
   );

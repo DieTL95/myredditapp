@@ -9,8 +9,8 @@ const SearchPage = async (props: {
   params: Params;
   searchParams: SearchParams;
 }) => {
-  console.log(await props.params);
-  const subname = (await props.params).slug;
+  console.log("Params: ", await props.params);
+  const subname = (await props.params).sub?.[0];
 
   const searchParams = await props.searchParams;
   const query = searchParams.q;

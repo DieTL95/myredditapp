@@ -11,6 +11,18 @@ const DropdownComponent = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  // const handleDownload = () => {
+  //   const ass = document.querySelector(".preview");
+  //   const saveImg = (ass: Element) => {
+  //     const dialg = document.createElement("dialog");
+  //     document.body.appendChild(dialg);
+  //     dialg.appendChild(ass);
+  //     dialg.showModal();
+  //   };
+  //   if (ass) {
+  //     saveImg(ass);
+  //   }
+  // };
 
   useEffect(() => {
     const handleOutsideClick = (e: Event) => {
@@ -56,8 +68,8 @@ const DropdownComponent = ({
                 <li>
                   <Link href={`/user/${user}`}>Profile</Link>
                 </li>
-                <li>
-                  <Link href={`/user/${user}`}>link</Link>
+                <li className="cursor-pointer">
+                  <span>span</span>
                 </li>
                 <li>
                   <Link href={`/user/${user}`}>Signout</Link>

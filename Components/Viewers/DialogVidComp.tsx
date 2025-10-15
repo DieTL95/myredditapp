@@ -1,5 +1,5 @@
-import { useRef, type ComponentType } from "react";
-import { IoMdClose } from "react-icons/io";
+import { X } from "lucide-react";
+import { useEffect, useRef, type ComponentType } from "react";
 import * as portals from "react-reverse-portal";
 
 const DialogVideoComponent = (portalNode: {
@@ -7,6 +7,13 @@ const DialogVideoComponent = (portalNode: {
   portalNode: portals.HtmlPortalNode<ComponentType<any>>;
 }) => {
   const modalRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (modalRef) {
+      modalRef.current?.focus();
+    }
+  }, [modalRef]);
+
   return (
     <dialog
       className="dialog min-w-full  min-h-[100vh] justify-center items-center overflow-x-hidden backdrop:bg-black/85 bg-transparent"
@@ -24,8 +31,8 @@ const DialogVideoComponent = (portalNode: {
           document.querySelector("dialog")?.close();
         }}
       >
-        <div>
-          <IoMdClose className="h-10 w-10" />
+        <div className="p-1 rounded-full bg-black/5 hover:bg-gray-400/40">
+          <X size={30} />
         </div>
       </div>
       <div

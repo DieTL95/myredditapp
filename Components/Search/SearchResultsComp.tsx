@@ -16,7 +16,6 @@ const SearchResultsComponent = ({
   subreddit?: string;
   restrict?: string;
 }) => {
-  console.log("QUERY: ", query);
   const redditType = "search";
   const {
     data,
