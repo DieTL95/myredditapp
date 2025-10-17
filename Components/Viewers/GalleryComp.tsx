@@ -25,8 +25,67 @@ const GalleryComponent = ({
   const [viewFull, setViewFull] = useState<boolean>(true);
   const [loading, setLoading] = useState(true);
   const [thumbLoading, setThumbLoading] = useState(true);
+  const [smallWin, setSmallWin] = useState<boolean>();
+  const galleryElementRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const thumbImgRef = useRef<HTMLImageElement>(null);
+  const elementWidth = window?.innerWidth;
+
+  const handleScroll = (direction: string) => {
+    const galleryParent = document.querySelector(".galleryParent") || undefined;
+    if (galleryParent) {
+      if (direction === "positive") {
+        galleryParent.scrollLeft += 100;
+      } else if (direction === "negative") {
+        galleryParent.scrollLeft -= 100;
+      }
+    }
+  };
+  useEffect(() => {
+    const galleryElm = galleryElementRef.current;
+    const thumgImg = thumbImgRef.current;
+    window.addEventListener("resize", (e) => {
+      const win = e.target as Window;
+      console.log("EEEEEEE: ", e);
+      if (galleryElm) {
+        console.log("Client: ", galleryElm.clientWidth);
+        console.log("Offset: ", galleryElm.offsetWidth);
+        console.log("Scroll: ", galleryElm.scrollWidth);
+        console.log("Windo: ", win.innerWidth);
+        console.log("ThumbImgRef: ", thumgImg?.naturalWidth, thumgImg?.src);
+
+        if (galleryElm?.offsetWidth + 50 > win.innerWidth) {
+          console.log("Smaller thant Offset");
+          setSmallWin(true);
+        }
+        if (galleryElm?.offsetWidth + 50 < win.innerWidth) {
+          console.log("Smaller thant Offset");
+          setSmallWin(false);
+        }
+      }
+    });
+    return () =>
+      window.removeEventListener("resize", (e) => {
+        const win = e.target as Window;
+        console.log("EEEEEEE: ", e);
+        if (galleryElm) {
+          console.log("Client: ", galleryElm.clientWidth);
+          console.log("Offset: ", galleryElm.offsetWidth);
+          console.log("Scroll: ", galleryElm.scrollWidth);
+          console.log("Windo: ", win.innerWidth);
+          console.log("ThumbImgRef: ", thumgImg?.naturalWidth, thumgImg?.src);
+
+          if (galleryElm?.offsetWidth + 50 > win.innerWidth) {
+            console.log("Smaller thant Offset");
+            setSmallWin(true);
+          }
+          if (galleryElm?.offsetWidth + 50 < win.innerWidth) {
+            console.log("Smaller thant Offset");
+            setSmallWin(false);
+          }
+        }
+      });
+  }, [elementWidth, currentImg]);
 
   useEffect(() => {
     const image = thumbImgRef.current;
@@ -154,7 +213,18 @@ const GalleryComponent = ({
         </div>
       </div>
 
-      <div className="w-full z-100 ">
+      <div
+        className={cn(
+          "absolute invisible bottom-0 scale-25 z-100 mx-auto right-[50%] ",
+          viewFull && " visible scale-100 transition-all delay-300"
+        )}
+      >
+        <div className="mx-auto w-4 text-white opacity-80 text-shadow-md text-shadow-background ">
+          {currentImg + 1}/{media.length}
+        </div>
+      </div>
+
+      <div className=" relative w-full z-100 bg-blue-200/20">
         <div className="flex h-0 w-full items-end justify-end z-100 mr-10">
           {" "}
           <div
@@ -164,11 +234,42 @@ const GalleryComponent = ({
             <GalleryHorizontalEnd size={26} />
           </div>
         </div>
+        <>
+          <div
+            className={cn(
+              "absolute hidden transition-all duration-200 ease-linear opacity-0 -translate-x-100 justify-center items-center  h-full right-0 z-100 text-white pr-2 bg-gradient-to-l from-black to-black/5",
+              smallWin && "flex translate-x-0 opacity-100"
+            )}
+          >
+            <button
+              className="hover:scale-110 rounded-full cursor-pointer p-1 hover:bg-white/30"
+              onClick={() => handleScroll("positive")}
+            >
+              <ArrowRight size={24} />
+            </button>
+          </div>
+
+          <div
+            className={cn(
+              "absolute hidden transition-all duration-200 ease-linear opacity-0 -translate-x-100 justify-center items-center  h-full left-0 z-100 text-white pl-2 bg-gradient-to-r from-black to-black/5",
+              smallWin && "flex translate-x-0 opacity-100"
+            )}
+          >
+            <button
+              className="hover:scale-110 rounded-full cursor-pointer p-1 hover:bg-white/30"
+              onClick={() => handleScroll("negative")}
+            >
+              <ArrowLeft size={24} />
+            </button>
+          </div>
+        </>
+
         <div
           className={cn(
-            "h-0 w-full transition-none ",
+            "galleryParent h-0 w-full px-10 transition-none cursor-default",
             !thumbLoading && " transition-all ease-linear duration-300",
-            !viewFull && "flex  h-30"
+            !viewFull && "flex  h-30",
+            smallWin && " overflow-x-hidden "
           )}
         >
           {thumbLoading && (
@@ -178,16 +279,18 @@ const GalleryComponent = ({
           )}
           <div
             className={cn(
-              "w-full h-full flex items-center justify-center",
-              thumbLoading && "hidden"
+              "w-fit  mx-auto h-full invisible flex items-center justify-center ",
+              !thumbLoading && "visible"
             )}
+            ref={galleryElementRef}
           >
             {media.map((obj, index) => (
               <div
                 key={index}
                 className={cn(
-                  "border cursor-pointer hover:border-indigo-300 z-100 h-full  transition-all ease-linear opacity-50 scale-75",
-                  currentImg === index && "opacity-100 scale-100"
+                  "border-2 cursor-pointer  hover:border-pink-900 z-70 h-full  transition-all ease-linear opacity-75 scale-75",
+                  currentImg === index &&
+                    "opacity-100 scale-100 border-none cursor-default"
                 )}
                 onClick={() => currentGalleryImgHandler(index)}
               >
@@ -197,14 +300,15 @@ const GalleryComponent = ({
                   width={100}
                   height={100}
                   loading={"eager"}
-                  sizes="125px"
+                  sizes="8rem"
                   style={{
                     height: "100%",
                     width: "auto",
+                    minWidth: "25px",
                     maxWidth: "125px",
                     objectFit: "contain",
                   }}
-                  className={cn("pb-0", thumbLoading && "w-[125px]")}
+                  className="pb-0"
                   alt={index.toString()}
                 />
               </div>

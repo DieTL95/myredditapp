@@ -253,7 +253,10 @@ const VideoPlayerComponent = ({
   }, [condition]);
 
   return (
-    <div className="w-full h-auto  relative flex rounded-[16px]">
+    <div
+      className="w-full h-auto z-20 relative flex rounded-[16px]"
+      onClick={handleClick}
+    >
       {condition === true && portalNode && (
         <div className="  h-full w-full">
           <DialogVideoComponent portalNode={portalNode} />
@@ -278,7 +281,6 @@ const VideoPlayerComponent = ({
                 poster={poster?.replace(/&amp;/g, "&")}
                 onPlay={() => setIsPlaying(true)}
                 onEnded={() => setIsPlaying(false)}
-                onClick={handleClick}
                 preload="metadata"
                 style={
                   {
