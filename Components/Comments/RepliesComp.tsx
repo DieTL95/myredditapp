@@ -19,7 +19,7 @@ const RepliesComponent = ({
   return (
     <div
       className={cn(
-        "flex flex-row w-full  pr-4",
+        "flex flex-row w-full pr-4",
         parent !== "post" && "pl-4 py-2 border-b border-b-twitter-gray"
       )}
     >
@@ -65,14 +65,17 @@ const RepliesComponent = ({
               </Link>
               {(reply.author_flair_richtext?.[0] ||
                 reply.author_flair_text) && <AuthorFlairComp post={reply} />}
-              <time
-                className="flex-row flex gap-1 items-center"
-                dateTime={new Date(reply.created * 1000).toLocaleString()}
-                title={new Date(reply.created * 1000).toLocaleString()}
-              >
-                <Clock strokeWidth={2} size={18} />
-                {relativeTimeFromElapsed(reply.created)}
-              </time>
+
+              <Link href={reply.permalink}>
+                <time
+                  className="flex-row flex gap-1 items-center"
+                  dateTime={new Date(reply.created * 1000).toLocaleString()}
+                  title={new Date(reply.created * 1000).toLocaleString()}
+                >
+                  <Clock strokeWidth={2} size={18} />
+                  {relativeTimeFromElapsed(reply.created)}
+                </time>
+              </Link>
               {reply.stickied && (
                 <span className="flex-row flex gap-1 items-center">
                   <Pin strokeWidth={2} size={18} />

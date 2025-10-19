@@ -29,31 +29,25 @@ export function relativeTimeFromElapsed(previous: number) {
   const elapsed = current - previous;
 
   if (elapsed < msPerMinute) {
-    return Math.round(elapsed / 1000) + " seconds ago";
+    return Math.round(elapsed / 1000) + "s";
   } else if (elapsed < msPerHour) {
-    return (
-      Math.round(elapsed / msPerMinute) +
-      `${elapsed / msPerMinute < 2 ? " Minute ago" : " Minutes ago"}`
-    );
+    return Math.round(elapsed / msPerMinute) + "m";
   } else if (elapsed < msPerDay) {
-    return (
-      Math.round(elapsed / msPerHour) +
-      `${elapsed / msPerHour < 2 ? " Hour ago" : " Hours ago"}`
-    );
+    return Math.round(elapsed / msPerHour) + "h";
   } else if (elapsed < msPerMonth) {
     return (
       Math.round(elapsed / msPerDay) +
-      `${elapsed / msPerDay < 2 ? " Day ago" : " Days ago"}`
+      `${Math.round(elapsed / msPerDay) < 2 ? " Day" : " Days"}`
     );
   } else if (elapsed < msPerYear) {
     return (
       Math.round(elapsed / msPerMonth) +
-      `${elapsed / msPerMonth < 2 ? " Month ago" : " Months ago"}`
+      `${Math.round(elapsed / msPerMonth) < 2 ? " Month" : " Months"}`
     );
   } else {
     return (
       Math.round(elapsed / msPerYear) +
-      `${elapsed / msPerYear < 2 ? " Year ago" : " Years ago"}`
+      `${Math.round(elapsed / msPerYear) < 2 ? " Year" : " Years"}`
     );
   }
 }

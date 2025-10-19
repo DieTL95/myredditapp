@@ -15,7 +15,7 @@ const PostCardComp = ({
 }) => {
   return (
     <div
-      className="flex max-w-[40vw] w-[40vw]  h-full flex-row box-border px-4 py-2 border-b border-b-twitter-gray hover:bg-black-hover"
+      className="flex h-full flex-row box-border px-4 py-2 border-b border-b-twitter-gray hover:bg-black-hover"
       id="ass"
     >
       <div className="h-full w-fit mr-[8px] mt-0.5">

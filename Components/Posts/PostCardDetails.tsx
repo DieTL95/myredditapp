@@ -52,14 +52,16 @@ const PostCardDetailsComponent = ({ post }: { post: PostData }) => {
             <AuthorFlairComp post={post} />
           )}
 
-          <time
-            className="flex-row flex gap-1 items-center"
-            dateTime={new Date(post.created * 1000).toLocaleString()}
-            title={new Date(post.created * 1000).toLocaleString()}
-          >
-            <Clock strokeWidth={2} size={18} />
-            {relativeTimeFromElapsed(post.created)}
-          </time>
+          <Link href={post.permalink}>
+            <time
+              className="flex-row flex gap-1 items-center"
+              dateTime={new Date(post.created * 1000).toLocaleString()}
+              title={new Date(post.created * 1000).toLocaleString()}
+            >
+              <Clock strokeWidth={2} size={18} />
+              {relativeTimeFromElapsed(post.created)}
+            </time>
+          </Link>
           {post.stickied && (
             <span className="flex-row flex gap-1 items-center">
               <Pin strokeWidth={2} size={18} />

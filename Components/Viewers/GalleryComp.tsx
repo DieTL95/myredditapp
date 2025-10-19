@@ -29,7 +29,6 @@ const GalleryComponent = ({
   const galleryElementRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const thumbImgRef = useRef<HTMLImageElement>(null);
-  const elementWidth = window?.innerWidth;
 
   const handleScroll = (direction: string) => {
     const galleryParent = document.querySelector(".galleryParent") || undefined;
@@ -43,23 +42,13 @@ const GalleryComponent = ({
   };
   useEffect(() => {
     const galleryElm = galleryElementRef.current;
-    const thumgImg = thumbImgRef.current;
     window.addEventListener("resize", (e) => {
       const win = e.target as Window;
-      console.log("EEEEEEE: ", e);
       if (galleryElm) {
-        console.log("Client: ", galleryElm.clientWidth);
-        console.log("Offset: ", galleryElm.offsetWidth);
-        console.log("Scroll: ", galleryElm.scrollWidth);
-        console.log("Windo: ", win.innerWidth);
-        console.log("ThumbImgRef: ", thumgImg?.naturalWidth, thumgImg?.src);
-
         if (galleryElm?.offsetWidth + 50 > win.innerWidth) {
-          console.log("Smaller thant Offset");
           setSmallWin(true);
         }
         if (galleryElm?.offsetWidth + 50 < win.innerWidth) {
-          console.log("Smaller thant Offset");
           setSmallWin(false);
         }
       }
@@ -67,25 +56,16 @@ const GalleryComponent = ({
     return () =>
       window.removeEventListener("resize", (e) => {
         const win = e.target as Window;
-        console.log("EEEEEEE: ", e);
         if (galleryElm) {
-          console.log("Client: ", galleryElm.clientWidth);
-          console.log("Offset: ", galleryElm.offsetWidth);
-          console.log("Scroll: ", galleryElm.scrollWidth);
-          console.log("Windo: ", win.innerWidth);
-          console.log("ThumbImgRef: ", thumgImg?.naturalWidth, thumgImg?.src);
-
           if (galleryElm?.offsetWidth + 50 > win.innerWidth) {
-            console.log("Smaller thant Offset");
             setSmallWin(true);
           }
           if (galleryElm?.offsetWidth + 50 < win.innerWidth) {
-            console.log("Smaller thant Offset");
             setSmallWin(false);
           }
         }
       });
-  }, [elementWidth, currentImg]);
+  }, []);
 
   useEffect(() => {
     const image = thumbImgRef.current;
@@ -266,7 +246,7 @@ const GalleryComponent = ({
 
         <div
           className={cn(
-            "galleryParent h-0 w-full px-10 transition-none cursor-default",
+            "galleryParent invisible h-0 w-full px-10 transition-none cursor-default",
             !thumbLoading && " transition-all ease-linear duration-300",
             !viewFull && "flex  h-30",
             smallWin && " overflow-x-hidden "
@@ -280,7 +260,7 @@ const GalleryComponent = ({
           <div
             className={cn(
               "w-fit  mx-auto h-full invisible flex items-center justify-center ",
-              !thumbLoading && "visible"
+              !thumbLoading && !viewFull && "visible"
             )}
             ref={galleryElementRef}
           >

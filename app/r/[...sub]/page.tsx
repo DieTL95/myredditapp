@@ -9,6 +9,7 @@ import SubLinksComp from "@/Components/Subreddits/SubLinksComp";
 import SidebarComponent from "@/Components/Misc/SidebarComp";
 import SearchPage from "@/app/search/page";
 import SubmittionPage from "@/app/submit/page";
+import PostWithRepliesSkeleton from "@/Components/LoadingSkeletons/PostWithRepliesSkeleton";
 
 type Params = Promise<{ sub: string[]; slug: string }>;
 type Props = {
@@ -66,19 +67,19 @@ const SubredditPage = async (props: {
   console.log(sub);
 
   return sub[1] === "comments" ? (
-    <CommentsComponent params={[...sub]} />
+    <Suspense fallback={<PostWithRepliesSkeleton />}>
+      <CommentsComponent params={[...sub]} />
+    </Suspense>
   ) : sub[1] === "search" ? (
     <SearchPage params={props.params} searchParams={props.searchParams} />
   ) : sub[1] === "submit" ? (
     <SubmittionPage page={sub[0]} />
   ) : (
     <Suspense fallback={<UserAndSubSkeleton />}>
-      <div className="flex flex-row">
-        <div className="border border-twitter-gray max-w-[40vw] mx-auto">
-          {sub[0] !== "friends" && <SubCardComponent sub={subInfo} />}
-          <SubLinksComp sub={sub} />
-          <SubPathComponent subreddit={sub[0]} sort={sub[1]} />
-        </div>
+      <div className="relative mx-auto">
+        {sub[0] !== "friends" && <SubCardComponent sub={subInfo} />}
+        <SubLinksComp sub={sub} />
+        <SubPathComponent subreddit={sub[0]} sort={sub[1]} />
         {subInfo && <SidebarComponent subInfo={subInfo} />}
       </div>
     </Suspense>

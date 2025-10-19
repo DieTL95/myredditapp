@@ -5,8 +5,8 @@ import Image from "next/image";
 const NavBarComponent = () => {
   return (
     <nav className="flex w-full border-b border-b-twitter-gray bg-black/60 backdrop-blur-md sticky  top-0 min-h-10 z-100">
-      <div className="flex flex-row just items-center w-[70vw] mx-auto">
-        <div className="basis-1/3 pl-1">
+      <div className="flex flex-row just items-center w-[70vw] mx-auto max-lg:justify-between max-lg:w-full max-lg:px-8">
+        <div className="basis-1/3 pl-1 max-lg:basis-auto">
           <div className="w-[40px] ">
             <Link href="/">
               <Image
@@ -18,10 +18,10 @@ const NavBarComponent = () => {
             </Link>
           </div>
         </div>
-        <div className=" basis-1/3">
+        <div className=" basis-1/3 max-lg:basis-full max-lg: px-2">
           <SearchComp />
         </div>
-        <div className="flex basis-1/3 justify-end h-full items-center">
+        <div className="flex basis-1/3 justify-end h-full items-center max-lg:basis-auto">
           <NavUserComponent />
         </div>
       </div>

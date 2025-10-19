@@ -13,7 +13,7 @@ const FeedPostsComp = ({
 }) => {
   console.log(redditData);
   return (
-    <div className="flex flex-col max-w-[40vw] mx-auto ">
+    <div className="flex flex-col  mx-auto ">
       {redditData.pages.map((pages, pageIndex) => (
         <div key={pageIndex}>
           {pages.children.map((post: Post) =>

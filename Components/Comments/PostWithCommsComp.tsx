@@ -37,7 +37,7 @@ const PostWithCommentsComponent = ({ params }: { params: string[] }) => {
   const replies = listing[1] as unknown as Replies;
 
   return (
-    <div className="flex flex-col max-w-[40vw] h-full mx-auto">
+    <div className="flex flex-col h-full mx-auto">
       <PostCardComp post={post[0]} />
       {post[0].data.send_replies && (
         <CommentSubmittionComponent parentId={post[0].data.name} />

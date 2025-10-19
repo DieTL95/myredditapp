@@ -50,29 +50,6 @@ const MediaComponent = ({ post }: { post: PostData }) => {
     console.log(meddy);
   };
 
-  // useEffect(() => {
-  //   if (!media) {
-  //     return;
-  //   }
-  //   if (post.domain === "i.redd.it") {
-  //     imgModalRef.current?.showModal();
-  //   }
-
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [media]);
-
-  // const inlineGalHandler = (postData: PostData) => {
-  //   const mediaObject = postData.media_metadata as GalleryMetadata[];
-  //   const moredata: GalleryMetadata[] = [];
-  //   for (const element in mediaObject) {
-  //     const data = mediaObject[element];
-  //     if (data.status === "valid") {
-  //       moredata.push(data);
-  //     }
-  //   }
-  //   return moredata;
-  // };
-
   useEffect(() => {
     const dialog = document.querySelector("dialog");
     if (!media) {
@@ -105,7 +82,12 @@ const MediaComponent = ({ post }: { post: PostData }) => {
       <div
         className=" max-h-[672px] pt-2"
         onClick={() => {
-          if (post.post_hint === "link") {
+          if (
+            post.post_hint === "link" &&
+            !["v.redd.it", "redgifs.com", "v3.redgifs.com"].includes(
+              post.domain
+            )
+          ) {
             window.open(post.url, "_blank");
           } else {
             openMedia(post, post.id, post.domain);
@@ -223,30 +205,6 @@ const MediaComponent = ({ post }: { post: PostData }) => {
       {media && post.domain === "i.redd.it" && (
         <ViewImageComponent image={media as string} />
       )}
-      {/* {openPostIndex === post.id &&
-        !post.is_self &&
-        media &&
-        post.domain === "i.redd.it" && (
-          <dialog
-            className="dialog min-w-full  min-h-[100vh] justify-center items-center overflow-x-hidden backdrop:bg-black/85 bg-transparent"
-            ref={imgModalRef}
-          >
-            <div
-              className=" absolute top-0 bottom-0 right-0 left-0 h-full w-full z-10"
-              onClick={() => {
-                imgModalRef.current?.close();
-                setMedia(undefined);
-              }}
-            ></div>
-
-            <div>
-        
-              {media && post.domain === "i.redd.it" && (
-                <ViewImageComponent image={media as string} />
-              )}
-            </div>
-          </dialog>
-        )} */}
     </>
   );
 };

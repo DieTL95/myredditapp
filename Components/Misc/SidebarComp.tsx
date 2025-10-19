@@ -28,8 +28,8 @@ const SidebarComponent = ({ subInfo }: { subInfo: SubCardType }) => {
   return (
     !isLoading &&
     subInfo.data.description_html && (
-      <div className="flex flex-col items-center sticky top-0 w-full ml-20">
-        <div className="w-[14vw]">
+      <div className="   absolute  -right-[5%] top-2 max-lg:hidden">
+        <div className="fixed px-4 py-2 rounded-[16px] overflow-y-scroll border border-twitter-gray max-h-[75vh] max-w-[360px]">
           <TextComponent post={subInfo.data.description_html} />
         </div>
       </div>

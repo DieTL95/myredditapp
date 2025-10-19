@@ -95,7 +95,7 @@ const SubSearchComponent = () => {
         <div
           className={cn(
             `flex flex-row group bg-pink-900  items-center justify-end overflow-hidden h-auto w-12 my-2 mx-auto  text-red-200 transition-[width] duration-1000`,
-            searchOpen !== false ? "w-[40vw] " : " w-12",
+            searchOpen !== false ? "w-[40vw] max-lg:w-full " : " w-12",
             value !== undefined && searchOpen !== false
               ? "rounded-t-3xl"
               : "rounded-3xl"

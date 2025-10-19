@@ -19,9 +19,9 @@ export default async function RootLayout({
       <body className="flex flex-col w-full h-screen font-roboto">
         <main className="w-full justify-center flex flex-col">
           <NavBarComponent />
-          <div className=" w-full justify-center flex flex-row ">
-            <div className="flex flex-col items-end flex-1/4 h-fit top-24 sticky">
-              <div className=" flex flex-col items-start font-light text-2xl px-2 w-1/2 ">
+          <div className=" w-full justify-center flex flex-row   ">
+            <div className="flex flex-col left-[12.5%] max-w-[275px] h-fit top-24 absolute  max-md:hidden max-lg:flex-auto">
+              <div className=" flex flex-col fixed items-start font-light text-2xl px-2 w-fit ">
                 <Link href="/" className="font-light">
                   <span className="font-light">Home</span>
                 </Link>
@@ -30,8 +30,8 @@ export default async function RootLayout({
                 <Link href="/r/friends">Friends</Link>
               </div>
             </div>
-            <div className=" flex-2/3 items-start justify-center flex flex-col">
-              <div className="flex flex-col max-w-[40vw] w-[40vw] justify-center border  border-twitter-gray">
+            <div className="  items-center justify-center flex flex-col max-lg:flex-auto max-lg:items-center ">
+              <div className="flex flex-col max-w-[766px] w-full justify-center border  border-twitter-gray">
                 {children}
               </div>
             </div>
@@ -50,21 +50,6 @@ export default async function RootLayout({
               style: { width: "fit-content", marginInline: "auto" },
             }}
             className="flex justify-center"
-            style={{
-              animation: "none",
-              animationDuration: "0",
-              animationTimeline: "none",
-              alignmentBaseline: "unset",
-              animationComposition: "unset",
-              animationDelay: "unset",
-              animationDirection: "unset",
-              animationFillMode: "unset",
-              animationPlayState: "unset",
-              animationName: "none",
-              animationIterationCount: "0",
-              animationRange: 0,
-              MozAnimation: "none",
-            }}
           />
         </main>
       </body>

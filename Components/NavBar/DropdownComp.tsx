@@ -47,7 +47,7 @@ const DropdownComponent = ({
     <div className=" w-full" ref={ref} id="dropdown">
       <div className="w-full">
         <div
-          className="cursor-pointer w-full flex flex-row gap-2 text-lg"
+          className="cursor-pointer w-full flex flex-row items-center gap-2 text-lg"
           onClick={() => setIsOpen((prev) => !prev)}
         >
           <Image
@@ -56,10 +56,11 @@ const DropdownComponent = ({
             height={0}
             sizes="100px"
             className="rounded-[50%]"
-            style={{ maxHeight: "30px", width: "auto" }}
+            style={{ maxHeight: "40px", width: "auto" }}
             alt={user!}
           />
-          {user}
+
+          <span className="max-lg:hidden">{user}</span>
         </div>
         <div className="w-full relative">
           {isOpen && (

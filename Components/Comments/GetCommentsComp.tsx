@@ -23,31 +23,6 @@ const GetCommentsComponent = ({ replies }: { replies: Replies }) => {
           </div>
         )
     );
-
-    // for (const key in childReplies) {
-    //   const child = childReplies[key];
-    //   console.log(`Child: ${child.data.author}`, child);
-    //   return (
-    //     <div>
-    //       {child.kind === "t1" && (
-    //         <div className="ml-4  p-1">
-    //           <RepliesComponent reply={child.data} />
-    //           {child.data.replies &&
-    //             child.data.replies.data.children.map(
-    //               (kind) =>
-    //                 kind.kind === "t1" && (
-    //                   <div key={kind.data.name} className="ml-4  p-1">
-    //                     <RepliesComponent reply={kind.data} />
-    //                     {kind.data.replies &&
-    //                       loadMoreReplies(kind.data.replies.data.children)}
-    //                   </div>
-    //                 )
-    //             )}
-    //         </div>
-    //       )}
-    //     </div>
-    //   );
-    // }
   };
   return (
     <div>
