@@ -2,8 +2,8 @@
 
 import PostSubmittionComponent from "@/Components/Submittions/PostSubmittionComp";
 
-const SubmittionPage = ({ page }: { page: string }) => {
-  return <PostSubmittionComponent page={page} />;
+const SubmittionPage = () => {
+  return <PostSubmittionComponent />;
 };
 
 export default SubmittionPage;

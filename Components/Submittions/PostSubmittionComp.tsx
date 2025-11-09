@@ -3,7 +3,7 @@ import type { SubredditRules } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 
-const PostSubmittionComponent = ({ page }: { page: string }) => {
+const PostSubmittionComponent = ({ page }: { page?: string }) => {
   const [kind, setKind] = useState<"link" | "self">("self");
   const [rules, setRules] = useState<SubredditRules>();
   // const subreddit = "u_IdkWhoTheFuckIAm";
@@ -12,6 +12,9 @@ const PostSubmittionComponent = ({ page }: { page: string }) => {
   // const id = "t3_1mfpur4";
   // const modhash = "u5zmv0cquo7f5af75febc6764ac87167258ea2530dce9aae3e";
   useEffect(() => {
+    if (!page) {
+      return;
+    }
     const rules = async () => {
       const res = await getSubRules(page);
       if (res) {
@@ -30,7 +33,9 @@ const PostSubmittionComponent = ({ page }: { page: string }) => {
     if (!title) {
       return;
     }
-
+    if (!page) {
+      return;
+    }
     const res = await postSubmitAction({
       subreddit: page,
       text: text,

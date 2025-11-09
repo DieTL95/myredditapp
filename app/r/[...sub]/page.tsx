@@ -8,8 +8,8 @@ import UserAndSubSkeleton from "@/Components/LoadingSkeletons/UserSubSkeleton";
 import SubLinksComp from "@/Components/Subreddits/SubLinksComp";
 import SidebarComponent from "@/Components/Misc/SidebarComp";
 import SearchPage from "@/app/search/page";
-import SubmittionPage from "@/app/submit/page";
 import PostWithRepliesSkeleton from "@/Components/LoadingSkeletons/PostWithRepliesSkeleton";
+import PostSubmittionComponent from "@/Components/Submittions/PostSubmittionComp";
 
 export type Params = Promise<{ sub: string[]; slug: string }>;
 type Props = {
@@ -78,7 +78,7 @@ const SubredditPage = async (props: {
   ) : sub[1] === "search" ? (
     <SearchPage params={props.params} searchParams={props.searchParams} />
   ) : sub[1] === "submit" ? (
-    <SubmittionPage page={sub[0]} />
+    <PostSubmittionComponent page={sub[0]} />
   ) : (
     <Suspense fallback={<UserAndSubSkeleton />}>
       <div className="relative mx-auto">
