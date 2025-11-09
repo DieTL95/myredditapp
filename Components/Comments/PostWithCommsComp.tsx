@@ -1,12 +1,13 @@
 "use client";
 
-import { fetchCommentsAction } from "@/lib/action";
-import type { PostData, PostWithComments, Replies } from "@/lib/types";
-import { useEffect, useState } from "react";
+import type { PostData, Replies } from "@/lib/types";
+import { useState } from "react";
 import GetCommentsComponent from "./GetCommentsComp";
 import PostCardComp from "../Posts/PostCardComp";
 import CommentSubmittionComponent from "../Submittions/CommentSubmittion";
 import Link from "next/link";
+import PostWithRepliesSkeleton from "../LoadingSkeletons/PostWithRepliesSkeleton";
+import { usePostComments } from "@/lib/utils";
 
 type PostsChildren = {
   data: PostData;
@@ -15,26 +16,25 @@ type PostsChildren = {
 
 const PostWithCommentsComponent = ({ params }: { params: string[] }) => {
   const [context, setContext] = useState(2);
-  const [listing, setListing] = useState<PostWithComments>();
 
-  useEffect(() => {
-    const fetchComms = async () => {
-      const res = await fetchCommentsAction(params[2], params[4], context);
-      if (res && res[0] && res[1]) {
-        setListing(res);
-      }
-    };
-    fetchComms();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [context]);
+  console.log(params);
 
-  if (!listing || !listing[0] || !listing[1]) {
-    return;
+  const { data, isPending } = usePostComments(
+    params[2],
+    params[4],
+    context
+  );
+
+  console.log(data);
+
+  if (!data && isPending) {
+    return <PostWithRepliesSkeleton />;
+  } else if (!data) {
+    return "Post not found";
   }
 
-  console.log(listing);
-  const post: PostsChildren = listing[0].data.children;
-  const replies = listing[1] as unknown as Replies;
+  const post: PostsChildren = data[0].data.children;
+  const replies = data[1] as unknown as Replies;
 
   return (
     <div className="flex flex-col h-full mx-auto">

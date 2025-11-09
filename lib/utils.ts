@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import {
+  fetchCommentsAction,
   fetchFrontPage,
   fetchPostsAction,
   fetchRedgifsAction,
@@ -198,6 +199,17 @@ export const useUserInfo = (user: string) => {
   return useQuery({
     queryKey: ["userInfo"],
     queryFn: async () => fetchUserInfo(user),
+  });
+};
+
+export const usePostComments = (
+  postId: string,
+  commentId: string,
+  context: number
+) => {
+  return useQuery({
+    queryKey: ["userInfo"],
+    queryFn: async () => fetchCommentsAction(postId, commentId, context),
   });
 };
 

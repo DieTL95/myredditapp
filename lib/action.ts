@@ -21,10 +21,6 @@ export const getRedditToken = async () => {
     headers: await headers(),
   });
 
-  if (!session?.user) {
-    redirect("/signin");
-  }
-
   const user = await db.user.findUnique({
     where: {
       id: session?.user.id,
@@ -46,10 +42,6 @@ export const getRedditToken = async () => {
     },
   });
   const now = new Date(Date.now());
-
-  if (!user) {
-    redirect("/signin");
-  }
 
   if (!account?.accessTokenExpiresAt) {
     console.log("awwwwwyyyyyy");

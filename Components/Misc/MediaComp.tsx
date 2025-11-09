@@ -96,7 +96,7 @@ const MediaComponent = ({ post }: { post: PostData }) => {
       >
         <div
           className={cn(
-            "flex flex-col h-full overflow-hidden relative rounded-[16px] border border-twitter-gray object-contain cursor-pointer",
+            "flex flex-col bg-black h-full overflow-hidden relative rounded-[16px] border border-twitter-gray object-contain cursor-pointer",
             post.over_18 && "border-red-700"
           )}
           id="media"

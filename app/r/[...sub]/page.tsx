@@ -11,11 +11,13 @@ import SearchPage from "@/app/search/page";
 import SubmittionPage from "@/app/submit/page";
 import PostWithRepliesSkeleton from "@/Components/LoadingSkeletons/PostWithRepliesSkeleton";
 
-type Params = Promise<{ sub: string[]; slug: string }>;
+export type Params = Promise<{ sub: string[]; slug: string }>;
 type Props = {
   params: Promise<{ sub: string[] }>;
 };
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+export type SearchParams = Promise<{
+  [key: string]: string | string[] | undefined;
+}>;
 
 type Post = {
   data: {
@@ -27,6 +29,7 @@ type Post = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   // read route params
   const { sub } = await params;
+  console.log("metadata");
 
   const res = await fetchCommentsAction(sub[2]);
   if (!res) {
@@ -56,15 +59,17 @@ const SubredditPage = async (props: {
   params: Params;
   searchParams: SearchParams;
 }) => {
+  console.log("sub");
   const params = await props.params;
   const sub = params.sub;
   const subInfo = await fetchSubredditInfo(sub[0]);
+  console.log("after sub");
 
   if (subInfo?.error) {
     return <div>Subreddit can`t be found. Reason: {subInfo?.reason}</div>;
   }
 
-  console.log(sub);
+  console.log("sub:", sub);
 
   return sub[1] === "comments" ? (
     <Suspense fallback={<PostWithRepliesSkeleton />}>
@@ -81,7 +86,7 @@ const SubredditPage = async (props: {
         <SubLinksComp sub={sub} />
         <SubPathComponent subreddit={sub[0]} sort={sub[1]} />
         {subInfo && <SidebarComponent subInfo={subInfo} />}
-      </div>
+      </div>{" "}
     </Suspense>
   );
 };
