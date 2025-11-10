@@ -21,6 +21,10 @@ export const getRedditToken = async () => {
     headers: await headers(),
   });
 
+  if (!session?.user) {
+    return;
+  }
+
   const user = await db.user.findUnique({
     where: {
       id: session?.user.id,
@@ -190,24 +194,42 @@ export const fetchFrontPage = async ({ pageParam }: { pageParam: string }) => {
   const accessToken = await getRedditToken();
 
   try {
-    const res = await fetch(
-      `https://oauth.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          authorization: `bearer ${accessToken}`,
-        },
+    if (accessToken) {
+      const res = await fetch(
+        `https://oauth.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            authorization: `bearer ${accessToken}`,
+          },
+        }
+      );
+
+      console.log(res);
+
+      if (res.ok) {
+        const { data } = await res.json();
+        console.log(data);
+
+        return data as RedditData;
       }
-    );
+    } else if (!accessToken) {
+      const res = await fetch(
+        `https://api.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`
+      );
 
-    if (res.ok) {
-      const { data } = await res.json();
+      console.log(res);
 
-      return data as RedditData;
+      if (res.ok) {
+        const { data } = await res.json();
+        console.log(data);
+
+        return data as RedditData;
+      }
     }
   } catch (error) {
-    throw new Error(`Error: ${error}`);
+    console.log(error);
   }
 };
 
@@ -643,34 +665,8 @@ export const fetchRedgifsAction = async (id: string): Promise<Gfy> => {
   if (!id) {
     return;
   }
-  // const session = await auth.api.getSession({
-  //   headers: await headers(),
-  // });
-
-  // const user = await db.user.findUnique({
-  //   where: {
-  //     id: session?.user.id,
-  //   },
-  //   include: {
-  //     redgifToken: {
-  //       select: {
-  //         accessToken: true,
-  //       },
-  //     },
-  //   },
-  // });
-
-  // let count = 0;
-  // console.log("DB Token: ", user?.redgifToken?.accessToken);
 
   const res = await fetch(`https://api.redgifs.com/v1/gifs/${id}`);
-
-  // console.log(`Count: ${count}`, "Res: ", res);
-  // if (!res.ok && count < 2) {
-  //   await getRedGifsToken();
-  //   count++;
-  //   await fetchRedgifsAction(id);
-  // }
 
   if (res.ok) {
     const { gfyItem } = await res.json();
@@ -679,58 +675,58 @@ export const fetchRedgifsAction = async (id: string): Promise<Gfy> => {
   }
 };
 
-export async function getRedGifsToken() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
+// export async function getRedGifsToken() {
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   });
 
-  if (!session?.user) {
-    throw new Error("Can't generate access token to guests.");
-  }
+//   if (!session?.user) {
+//     throw new Error("Can't generate access token to guests.");
+//   }
 
-  const user = await db.user.findUnique({
-    where: {
-      id: session?.user.id,
-    },
-    include: {
-      redgifToken: {
-        select: {
-          accessToken: true,
-        },
-      },
-    },
-  });
+//   const user = await db.user.findUnique({
+//     where: {
+//       id: session?.user.id,
+//     },
+//     include: {
+//       redgifToken: {
+//         select: {
+//           accessToken: true,
+//         },
+//       },
+//     },
+//   });
 
-  if (user?.redgifToken) {
-    await db.redgifsToken.delete({
-      where: {
-        userId: session.user.id,
-      },
-    });
-  }
+//   if (user?.redgifToken) {
+//     await db.redgifsToken.delete({
+//       where: {
+//         userId: session.user.id,
+//       },
+//     });
+//   }
 
-  const now = new Date(Date.now());
+//   const now = new Date(Date.now());
 
-  try {
-    const res = await fetch("https://api.redgifs.com/v2/auth/temporary");
-    if (res.ok) {
-      const expires = new Date(now.setDate(now.getDate() + 1));
+//   try {
+//     const res = await fetch("https://api.redgifs.com/v2/auth/temporary");
+//     if (res.ok) {
+//       const expires = new Date(now.setDate(now.getDate() + 1));
 
-      const jsonData = await res.json();
-      console.log("Fetched Token: ", jsonData);
-      const data = await db.redgifsToken.create({
-        data: {
-          accessToken: jsonData.token,
-          ipAddress: jsonData.addr,
-          redgifSession: jsonData.session,
-          userAgent: jsonData.agent,
-          userId: session.user.id,
-          expiresAt: expires,
-        },
-      });
-      return data.accessToken;
-    }
-  } catch (error) {
-    throw new Error("Couldn't create token" + error);
-  }
-}
+//       const jsonData = await res.json();
+//       console.log("Fetched Token: ", jsonData);
+//       const data = await db.redgifsToken.create({
+//         data: {
+//           accessToken: jsonData.token,
+//           ipAddress: jsonData.addr,
+//           redgifSession: jsonData.session,
+//           userAgent: jsonData.agent,
+//           userId: session.user.id,
+//           expiresAt: expires,
+//         },
+//       });
+//       return data.accessToken;
+//     }
+//   } catch (error) {
+//     throw new Error("Couldn't create token" + error);
+//   }
+// }
