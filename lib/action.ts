@@ -22,7 +22,7 @@ export const getRedditToken = async () => {
   });
 
   if (!session?.user) {
-    return;
+    redirect("/signin");
   }
 
   const user = await db.user.findUnique({
@@ -46,7 +46,9 @@ export const getRedditToken = async () => {
     },
   });
   const now = new Date(Date.now());
-
+  if (!user) {
+    redirect("/signin");
+  }
   if (!account?.accessTokenExpiresAt) {
     console.log("awwwwwyyyyyy");
     return;
@@ -194,47 +196,21 @@ export const fetchFrontPage = async ({ pageParam }: { pageParam: string }) => {
   const accessToken = await getRedditToken();
 
   try {
-    if (accessToken) {
-      const res = await fetch(
-        `https://oauth.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `bearer ${accessToken}`,
-          },
-        }
-      );
-
-      console.log(res);
-
-      if (res.ok) {
-        const { data } = await res.json();
-        console.log(data);
-
-        return data as RedditData;
+    const res = await fetch(
+      `https://oauth.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `bearer ${accessToken}`,
+        },
       }
-    } else if (!accessToken) {
-      const res = await fetch(
-        `https://api.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`,
-        {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            "access-control-allow-origin": "*",
-            "content-type": "application/json; charset=UTF-8",
-          },
-        }
-      );
+    );
 
-      console.log(res);
+    if (res.ok) {
+      const { data } = await res.json();
 
-      if (res.ok) {
-        const { data } = await res.json();
-        console.log(data);
-
-        return data as RedditData;
-      }
+      return data as RedditData;
     }
   } catch (error) {
     console.log(error);
