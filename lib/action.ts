@@ -216,7 +216,15 @@ export const fetchFrontPage = async ({ pageParam }: { pageParam: string }) => {
       }
     } else if (!accessToken) {
       const res = await fetch(
-        `https://api.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`
+        `https://api.reddit.com/best?limit=10&raw_json=1&sr_detail=true&after=${pageParam}`,
+        {
+          method: "GET",
+          mode: "cors",
+          headers: {
+            "access-control-allow-origin": "*",
+            "content-type": "application/json; charset=UTF-8",
+          },
+        }
       );
 
       console.log(res);
