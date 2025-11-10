@@ -1,3 +1,5 @@
+"use client";
+
 import { getSubRules, postSubmitAction } from "@/lib/action";
 import type { SubredditRules } from "@/lib/types";
 import { cn } from "@/lib/utils";

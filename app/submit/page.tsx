@@ -1,5 +1,3 @@
-"use client";
-
 import PostSubmittionComponent from "@/Components/Submittions/PostSubmittionComp";
 
 const SubmittionPage = () => {
